@@ -1,0 +1,155 @@
+openapi: 3.0.3
+info:
+  title: Investor Service
+  description: |
+    Le role de ce service est de maintenir les données signalétiques (userid, nom, prenom, etc...) 
+    d'un investisseur.
+
+    **Note:** 
+    Lorsqu'on crée un investisseur ou qu'on le supprime, il est nécessaire d'aussi creer ses
+    credentials (service authentication)
+  version: 1.0.0
+paths:
+  /investor/{username}:
+    parameters:
+      - name: username
+        in: path
+        description: le username de l'investisseur (plus d'infos, voir '#/components/schemas/investor_data')
+        required: true
+        schema: 
+          type: string
+    get:
+      summary: Récupère les informations relatives à un investisseur donné
+      responses:
+        404:
+          description: l'investisseur n'a pas pu être trouvé
+        200:
+          description: les informations de l'investisseur
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/investor_data'
+    post: 
+      summary: Crée un nouvel investisseur dans le système
+      requestBody:
+        description: |
+          Les données signalétiques d'un investisseur ainsi que les credentials qu'il souhaite
+          utiliser pour s'identifier dans le système.
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/investor_with_password'
+      responses:
+        400:
+          description: Les données de l'investisseur sont invalides
+        409:
+          description: L'investisseur existe déjà
+        201:
+          description: L'investisseur a été créé
+    put:
+      summary: Modifie les données signalétiques d'un investisseur existant
+      requestBody:
+        description: Les données signalétiques d'un investisseur
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/investor_data'
+      responses:
+        400:
+          description: Les données de l'investisseur sont invalides
+        404:
+          description: L'investisseur n'a pas pu être trouvé
+        200:
+          description: L'investisseur a été mis à jour
+    delete:
+      summary: Supprime l'utilisateur du système.
+      description: |
+        Supprime l'utilisateur du système. 
+
+        **Attention:** 
+        Lorsqu'on supprime un utilisateur du système, on supprime ses credentials et son portefeuille
+        (il faut que celui-ci soit vide pour qu'on puisse supprimer le compte de l'investisseur).
+        Toutefois, l'historique des ordres et des transactions qui ont été passées par l'investisseur continue
+        d'exister au sein du système.
+      responses:
+        400: 
+          description: La situation de l'investisseur ne permet actuellement pas de supprimer son compte
+        404:
+          description: Les credentials n'ont pas pu être trouvés
+        200:
+          description: Les credentials ont été supprimés
+components:
+  schemas:
+    investor_data:
+      description: |
+        Un investordata représente l'ensemble des données signalétiques d'un investisseur
+        mais pas ses credentials (mot de passe, security token, ... peu importe le mécanisme
+        d'authentification). 
+        Dans une application réelle, les investordata comprendraient une série d'information
+        relatives au profil d'investisseur MIFID etc... Ici on se contentera de ne garder que
+        son nom, prénom, date de naissance, email et username.
+    
+        **Note** La plupart de ces information ne sera pas réellement utilisé dans notre système de 
+        trading. Mais ces données personnelles seraient cruciales dans le cas d'une application de 
+        trading réelle. Dans ce cas, il aurait fallu prendre en compte les prescription du RGPD pour
+        la collecte et le stockage des informations.
+      type: object
+      properties:
+        username:
+          description: |
+            Le username est un nom choisi par l'utilisateur. Ce nom est utilisé 
+            comme identifiant unique au sein du système.
+          type: string
+        email:
+          description: |
+            Il s'agit de l'adresse email d'un utilisateur. C'est par ce biais que la société
+            VSX pourra communiquer avec l'utilisateur.
+          type: string
+        firstname:
+          description: |
+            Il s'agit du prénom réel de l'investisseur avec lequel on traite.
+          type: string
+        lastname:
+          description: |
+            Il s'agit du nom de famille réel de l'investisseur avec lequel on traite.
+        birthdate:
+          description: |
+            Il s'agit de la date de naissance de l'investisseur réel (sur une vraie plateforme, les mineurs
+            n'ont ni le droit de posséder un compte, ni le droit d'emettre des ordres).
+          type: string
+      required:
+        - username
+        - email
+        - firstname
+        - lastname
+        - birthdate
+      example:
+        username: picsou
+        email: picsou@canardville.com
+        firstname: Scrooge
+        lastname: McDuck
+        birthdate: 15/12/1947
+    investor_with_password:
+      description: |
+        Les données signalétiques d'un investisseur ainsi que les credentials qu'il souhaite
+        utiliser pour s'identifier dans le système.
+      type: object
+      properties:
+        investor_data:
+          $ref: '#/components/schemas/investor_data'
+        password:
+          type: string
+      required:
+        - investordata
+        - password
+      example:
+        investor_data:
+          username: picsou
+          email: picsou@canardville.com
+          firstname: Scrooge
+          lastname: McDuck
+          birthdate: 15/12/1947
+        password: get_rich_fast
+
+
+    

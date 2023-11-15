@@ -1,0 +1,231 @@
+openapi: 3.0.0
+info:
+  title: Order Service
+  description: |
+    Le role de ce service est de maintenir la liste des ordres qui ont été passés et leur statut.
+
+    **Note:** 
+    Ce n'est pas le service d'ordre qui va se charger de faire le matching entre plusieurs ordres. Ce n'est
+    pas non plus le service d'ordre qui va se charger d'effectivement _exécuter_ les ordres. Par contre, 
+    il est important de noter que la création d'un ordre va notifier le service de matching qui chercher
+    à satisfaire l'ordre nouvellement créé avec un autre ordre présent dans le système.
+  version: 1.0.0
+paths:
+  /order:
+    post:
+      description: |
+        Passe un ordre sur la plateforme d'échange. 
+
+        **Note** 
+        On considere que les ordres passés sur la plateforme VSX sont passés en mode 'fire-and-forget'. C'est à dire
+        qu'une fois qu'un ordre est passé, il n'est plus possible à un utilisateur de le modifier ni de l'annuler.
+        Le système de matching pourra quant à lui modifier la valeur de la quantité 'filled' pour un ordre donné. 
+
+        **Important**
+        Le champ guid correspond à une donnée qui est fixée par le système. Il n'est donc pas permis à un 
+        utilisateur de décider du guid de l'ordre qu'il passe. Toute tentative de forcer le guid devrait provoquer
+        le rejet de l'ordre.
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/order'
+      responses:
+        400:
+          description: |
+            L'odre n'est pas correct
+        200: 
+          description: |
+            L'ordre a bien été passé. Renvoie l'ordre tel qu'il est connu par le système.
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/order'
+  /order/{guid}:
+    parameters:
+      - name: guid
+        in: path
+        description: le guid d'un ordre en particulier (plus d'infos, voir '#/components/schemas/order')
+        schema: 
+          type: string
+        required: true
+        example: 6B29FC40-CA47-1067-B31D-00DD010662DA
+    get:
+      description: renvoie le détail d'un ordre en particulier
+      responses:
+        404: 
+          description: l'ordre n'a pas été trouvé
+        200:
+          description: voici les détails de l'ordre demandé
+          content:
+            'application/json':
+              schema: 
+                $ref: '#/components/schemas/order'
+    patch:
+      description: |
+        permet au système de mettre à jour la quantité d'action qui a déjà été échangée suite à cet ordre.
+      requestBody:
+        content:
+          'application/json':
+            schema: 
+              type: object
+              properties:
+                filled:
+                  type: integer
+                  description: la quantité de titres qui a déjà été échangée suite à cet ordre.
+      responses:
+        404: 
+          description: l'odre n'a pas été trouvé
+        200:
+          description: l'ordre a bien été modifié pour reflété la quantité echangée.
+  /order/by-user/{username}:
+    parameters:
+      - name: username
+        description: |
+          le username de l'investisseur dont on cherche à lister tous les ordres. Pour plus d'informations 
+          quant à la signification de username, se référer à 'investor.yml#/components/schemas/investordata'
+        in: path
+        required: true
+        schema: 
+          type: string
+        example: picsou
+    get:
+      description: liste tous les ordres (ouverts et complétés) qui ont été passés par un investisseur donné 
+      responses:
+        404:
+          description: l'investisseur n'a pas été trouvé 
+        200:
+          description: voici la liste des ordres passés par cet investisseur 
+          content:
+            'application/json':
+              schema:
+                type: array
+                items: 
+                  $ref: '#/components/schemas/order'
+  /order/open/by-ticker/{ticker}/{side}:
+    parameters:
+      - name: ticker
+        description: le ticker (voir 'wallet.yml#/components/schemas/position')
+        in: path 
+        required: true
+        schema: 
+          type: string
+        example: picsou
+      - name: side 
+        description: le sous ensemble d'ordres ouverts qu'on souhaite lister (les ordre d'achat ou de vente)
+        in: path 
+        required: true
+        schema: 
+          $ref: '#/components/schemas/orderside'
+        example: SELL
+    get: 
+      responses:
+        200:
+          description: |
+            Voici la liste des ordres ouverts (= non complétés) demandés. Cette liste est potentiellement vide 
+          content:
+            'application/json':
+              schema: 
+                type: array
+                items: 
+                  $ref: '#/components/schemas/order'
+components:
+  schemas:
+    order:
+      description: | 
+        un ordre passé par un investisseur sur la plateforme d'échange.
+      type: object
+      properties:
+        guid: 
+          description: |
+            un identifiant gloablement unique qui permet donc d'identifier un ordre donné de facon univoque.
+
+            **Important**
+            Ce champ est optionnel et correspond à une donnée qui est fixée par le système. Il n'est donc pas
+            permis à un utilisateur de décider du guid de l'ordre qu'il passe.
+          type: string
+          example: 6B29FC40-CA47-1067-B31D-00DD010662DA
+        owner:
+          description: | 
+            le username de l'investisseur qui a passé cet ordre. Pour plus d'informations, consulter
+            'investor.yml#/components/schemas/investordata'
+          type: string
+        timestamp:
+          description: |
+            un timestamp représentant l'information relative au moment (date + heure + seconde) ou cet
+            ordre a été passé.  Par facilité, on va considérer que ce timestamp correspond à un timestamp UNIX.
+            C'est à dire le nombre de secondes qui se sont écoulées depuis EPOCH (1er janvier 1970).
+          type: integer
+        ticker:
+          description: |
+            le ticker est un code alphanumérique (généralement sur 4 char) qui indentifie un instrument
+            financier de manière unique. (C'est une hypothèse simplificatrice: dans la pratique, seul le 
+            code ISIN permet d'identifier un instrument financier de facon unique. Mais à nouveau, on considère
+            que c'est ok dans le cadre de ce projet)
+          type: string
+          example: 'AAPL'
+        quantity:
+          description: |  
+            la quantité de cet instrument financier qui sera échangé suite à l'exécution de cet ordre
+          type: integer
+          example: 159
+        side:
+          $ref: '#/components/schemas/orderside'
+        type: 
+          $ref: '#/components/schemas/ordertype'
+        limit:
+          description: |
+            le prix d'achat ou de vente *unitaire* limite pour un instrument financier concerné par cet ordre.
+            
+            **Attention** Meme si ce champ est optionnel, il est obligatoire de le mentionner dans le cas ou 
+            le champ 'type' reprend l'ordertype LIMIT. Sans ca, l'odre doit etre considéré comme inconsistant.
+          type: number
+        filled:
+          description: |
+            la quantité de titres concerné par cet ordre qui a déjà été échangée. 
+
+            Dans le cas d'un ordre qui peut être satisfait en une seule opération (matching complet avec un seul 
+            autre ordre), ce champ n'a que peu d'intéret. Cependant, il s'avère nécessaire lorsqu'on veut pouvoir
+            dire qu'un ordre est partiellement satisfait. 
+
+            **Exemple**
+            Si  Alice décide de passer un ordre MARKET pour acheter 100 actions LNRD et 
+            que Bob   décide de passer un ordre MARKET pour vendre 80 actions LNRD, 
+            on pourra satisfaire l'ordre de Bob complètement, en une seule opération. L'odre de Alice, par contre, 
+            n'est que partiellement complété. Dans ce cas, il est utile de savoir combien d'actions Alice souhaite
+            encore acheter pour pouvoir satisfaire sa requete un peu plus tard, lorque Cedrick décidera de passer
+            un ordre dans lequel il indique vouloir vendre 20 LNRD.
+
+            **Note:**
+            Ce champ est optionnel. Par défaut, on considère que sa valeur vaut 0 
+          type: integer
+      required:
+        - ticker
+        - quantity
+        - side
+        - type
+      example:
+        owner: picsou
+        timestamp: 457696995
+        ticker: LNRD
+        quantity: 10
+        side: BUY
+        type: LIMIT
+        limit: 100.0
+        filled: 5
+    orderside:
+      description: |
+        De quel coté de la transaction se place le passeur d'ordre ? est-il vendeur ? est-il acheteur ?
+      type: string
+      enum:
+        - BUY
+        - SELL
+    ordertype:
+      description: |
+        Les types d'ordres qui sont permis au sein de la plateforme VSX (à savoir pour l'instant: MARKET et LIMIT)
+      type: string
+      enum:
+        - MARKET
+        - LIMIT
+    
+    

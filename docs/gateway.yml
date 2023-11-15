@@ -1,0 +1,295 @@
+openapi: 3.0.3
+info:
+  title: VSX Gateway, your one stop shop to being rich (or so you think... but at least get good grades in Spring)
+  description: |
+    Le gateway est le point d'entrée vers VSX depuis le monde extérieur. Ce point d'entrée doit s'assurer
+    que tous les services qui sont appelés, le soient dans des conditions correctes. C'est à dire que
+    c'est le gateway qui va s'assurer que l'investisseur soit authentifié avant de pouvoir appeler d'autres 
+    services.
+
+    Ce point d'entrée veillera à n'exposer que les fonctionalités relevantes au monde extérieur. En particulier, 
+    le gateway permettra: 
+    * la création d'un investisseur
+    * a un investisseur de s'authentifier
+    * a un investisseur de supprimer son compte
+    * a un investisseur de consultater de ses données signalétiques
+    * a un investisseur de modifier son mot de passe 
+    * a un investisseur de passer un ordre
+    * a un investisseur de lister tous les ordres qu'il a passé
+    * a un investisseur de consulter la composition de son portefeuille
+    * a un investisseur de calculer la valeur totale de son portefeuille.
+    * a un investisseur de verser du CASH sur son compte
+    * a un investisseur de retirer du CASH sur son compte
+    * a un investisseur de connaitre le dernier prix d'échange de n'importe quel titre en échange sur la plateforme.
+  version: 1.0.0
+paths:
+  /investor/{username}:
+    parameters:
+      - name: username
+        in: path
+        description: le username de l'investisseur (plus d'infos, voir '#/components/schemas/investor_data')
+        required: true
+        schema: 
+          type: string
+    get:
+      summary: Récupère les informations relatives à un investisseur donné
+      responses:
+        400:
+          description: vous n'avez pas le droit de consulter les données de cet investisseur
+        404: 
+          description: l'investisseur n'a pas pu être trouvé
+        200:
+          description: les informations de l'investisseur
+          content:
+            'application/json':
+              schema:
+                $ref: 'investor.yaml#/components/schemas/investor_data'
+    post: 
+      summary: Crée un nouvel investisseur dans le système
+      requestBody:
+        description: |
+          Les données signalétiques d'un investisseur ainsi que les credentials qu'il souhaite
+          utiliser pour s'identifier dans le système.
+        content:
+          'application/json':
+            schema:
+              $ref: 'investor.yaml#/components/schemas/investor_with_password'
+      responses:
+        400:
+          description: Les données de l'investisseur sont invalides
+        409:
+          description: L'investisseur existe déjà
+        201:
+          description: L'investisseur a été créé
+    put:
+      summary: Modifie les données signalétiques d'un investisseur existant
+      requestBody:
+        description: |
+          Les données signalétiques d'un investisseur
+        content:
+          'application/json':
+            schema:
+              $ref: 'investor.yaml#/components/schemas/investor_data'
+      responses:
+        400:
+          description: Les données de l'investisseur sont invalides
+        404:
+          description: L'investisseur n'a pas pu être trouvé
+        200:
+          description: L'investisseur a été mis à jour
+    delete:
+      summary: Supprime l'utilisateur du système.
+      description: |
+        Supprime l'utilisateur du système. 
+
+        **Attention:** 
+        Lorsqu'on supprime un utilisateur du système, on supprime ses credentials et son portefeuille
+        (il faut que celui-ci soit vide pour qu'on puisse supprimer le compte de l'investisseur).
+        Toutefois, l'historique des ordres et des transactions qui ont été passées par l'investisseur continue
+        d'exister au sein du système.
+      responses:
+        400: 
+          description: La situation de l'investisseur ne permet actuellement pas de supprimer son compte
+        404:
+          description: Les credentials n'ont pas pu être trouvés
+        200:
+          description: Les credentials ont été supprimés
+
+  /authentication/connect:
+    post:
+      summary: Initie une session pour un investisseur au sein de la plateforme VSX
+      requestBody:
+        description: Les credentials (informations d'identifications) de l'utilisateur.
+        content:
+          'application/json':
+            schema:
+              $ref: 'authentication.yaml#/components/schemas/credentials'
+      responses:
+        400:
+          description: Les credentials sont invalides
+        401:
+          description: username ou password incorrect
+        200:
+          description: l'utilisateur est connecté. On renvoie un token JWT pour assurer le suivi de la session.
+          content:
+            'text/plain':
+              schema:
+                type: string
+                example: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJhdXRoMCIsInBzZXVkbyI6IkNhdDRMaWZlIn0.LqfooEI-I9VTBo-isjm812ttnIPagMCwdhRkW5ngn0_tlLX86LRoxahgskmgIeWDbm4Mu3y3D8Qbhq_71hNQTA
+ 
+  /authentication/{username}:
+    parameters:
+      - name: username
+        in: path
+        description: le username de l'investisseur (voir service 'investor.yml' pour plus de détails)
+        schema:
+          type: string
+        required: true
+    put:
+      summary: Mets à jour les credentials d'un investisseur existant
+      requestBody:
+        description: Credentials de l'investisseur
+        content:
+          'application/json':
+            schema:
+              $ref: 'authentication.yaml#/components/schemas/credentials'
+      responses:
+        400:
+          description: Les credentials sont invalides
+        404:
+          description: Les credentials n'ont pas pu être trouvés
+        200:
+          description: Les credentials ont été mis à jour
+
+  /order:
+    post:
+      description: |
+        Passe un ordre sur la plateforme d'échange. 
+
+        **Note** 
+        On considere que les ordres passés sur la plateforme VSX sont passés en mode 'fire-and-forget'. C'est à dire
+        qu'une fois qu'un ordre est passé, il n'est plus possible à un utilisateur de le modifier ni de l'annuler.
+        Le système de matching pourra quant à lui modifier la valeur de la quantité 'filled' pour un ordre donné. 
+
+        **Important**
+        Le champ guid correspond à une donnée qui est fixée par le système. Il n'est donc pas permis à un 
+        utilisateur de décider du guid de l'ordre qu'il passe. Toute tentative de forcer le guid devrait provoquer
+        le rejet de l'ordre.
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              $ref: 'order.yml#/components/schemas/order'
+      responses:
+        400:
+          description: |
+            L'odre n'est pas correct
+        200: 
+          description: |
+            L'ordre a bien été passé. Renvoie l'ordre tel qu'il est connu par le système.
+          content:
+            'application/json':
+              schema:
+                $ref: 'order.yml#/components/schemas/order'
+  /order/by-user/{username}:
+    parameters:
+      - name: username
+        description: |
+          le username de l'investisseur dont on cherche à lister tous les ordres. Pour plus d'informations 
+          quant à la signification de username, se référer à 'investor.yml#/components/schemas/investordata'
+        in: path
+        required: true
+        schema: 
+          type: string
+        example: picsou
+    get:
+      description: liste tous les ordres (ouverts et complétés) qui ont été passés par un investisseur donné 
+      responses:
+        404:
+          description: l'investisseur n'a pas été trouvé 
+        401:
+          description: vous n'avez pas le droit de consulter l'historique des ordres de cet utilisateur 
+        200:
+          description: voici la liste des ordres passés par cet investisseur 
+          content:
+            'application/json':
+              schema:
+                type: array
+                items: 
+                  $ref: 'order.yml#/components/schemas/order'
+
+  /wallet/{username}:
+    parameters:
+    - name: username
+      in: path
+      description: le username de l'investisseur (plus d'infos, voir 'investor.yml#/components/schemas/investordata')
+      required: true
+      schema: 
+        type: string
+    
+    get:
+      description: Renvoie la liste des positions ouvertes (quantité possédée > 0)
+      responses:
+        401:
+          description: vous n'avez pas le droit de consulter les données de cet investisseur
+        404: 
+          description: l'investisseur n'a pas pu être trouvé
+        200:
+          description: les positions ouvertes de cet investisseur
+          content:
+            'application/json':
+              schema:
+                type: array
+                items:
+                  $ref: 'wallet.yml#/components/schemas/position'
+                example:
+                  - ticker: 'AAPL'
+                    quantity: 10
+                    unitvalue: 155.9
+                  - ticker: 'MSFT'
+                    quantity: 8
+                    unitvalue: 253.8
+                  - ticker: 'NVDA'
+                    quantity: 3
+                    unitvalue: 493.8
+
+  /wallet/{username}/cash:
+    parameters:
+    - name: username
+      in: path
+      description: le username de l'investisseur (plus d'infos, voir 'investor.yml#/components/schemas/investordata')
+      required: true
+      schema: 
+        type: string
+    
+    post:
+      description: |
+        Permet à l'investisseur de verser ou retirer de son portefeuille
+      requestBody:
+        content:
+          'application/json':
+            schema:
+                type: object
+                properties:
+                  cash: 
+                    description: |
+                      la quantité de CASH ajoutée ou supprimée du portefeuille de l'investisseur. 
+                      Une valeur positive indiquera que l'investisseur a fait un versement de CASH sur son compte.
+                      Une valeur négative indiquera que l'investisseur a fait un retrait de CASH depuis son compte.
+                    type: number
+            example:
+            - cash: 1000.0
+      responses:
+        401:
+          description: vous n'avez pas le droit de consulter les données de cet investisseur
+        404: 
+          description: l'investisseur n'a pas pu être trouvé
+        200:
+          description: les nouvelles positions ouvertes de cet investisseur (après qu'elles ait été mises à jour)
+          content:
+            'application/json':
+              schema:
+                type: array
+                items:
+                  $ref: 'wallet.yml#/components/schemas/position'
+  /wallet/{username}/net-worth:
+    parameters:
+    - name: username
+      in: path
+      description: le username de l'investisseur (plus d'infos, voir 'investor.yml#/components/schemas/investordata')
+      required: true
+      schema: 
+        type: string
+    get:
+      description: Renvoie la valeur totale du portefeuille d'un investisseur 
+      responses:
+        401:
+          description: vous n'avez pas le droit de consulter les données de cet investisseur
+        404: 
+          description: l'investisseur n'a pas pu être trouvé
+        200:
+          description: voila la valeur totale de cet investisseur
+          content:
+            'application/json':
+              schema:
+                type: number

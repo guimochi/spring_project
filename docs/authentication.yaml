@@ -1,0 +1,119 @@
+openapi: 3.0.3
+info:
+  title: Authentication Service
+  description: |
+    Le role de ce service est de permettre l'authentification des investisseurs sur la plateforme VSX.
+
+    **Note** Dans ce service, on utilisera les termes 'investisseur' et 'utilisateur' de façon totalement interchangeable.
+  version: 1.0.0
+paths:
+  /authentication/connect:
+    post:
+      summary: Initie une session pour un investisseur au sein de la plateforme VSX
+      requestBody:
+        description: Les credentials (informations d'identifications) de l'utilisateur.
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/credentials'
+      responses:
+        400:
+          description: Les credentials sont invalides
+        401:
+          description: username ou password incorrect
+        200:
+          description: l'utilisateur est connecté. On renvoie un token JWT pour assurer le suivi de la session.
+          content:
+            'text/plain':
+              schema:
+                type: string
+                example: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJhdXRoMCIsInBzZXVkbyI6IkNhdDRMaWZlIn0.LqfooEI-I9VTBo-isjm812ttnIPagMCwdhRkW5ngn0_tlLX86LRoxahgskmgIeWDbm4Mu3y3D8Qbhq_71hNQTA
+  /authentication/verify:
+    post:
+      summary: Verifie qu'un token token correspond à une session effectivement en cours.
+      requestBody:
+        description: le token JWT
+        content:
+          'text/plain':
+            schema:
+              type: string
+              example: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJhdXRoMCIsInBzZXVkbyI6IkNhdDRMaWZlIn0.LqfooEI-I9VTBo-isjm812ttnIPagMCwdhRkW5ngn0_tlLX86LRoxahgskmgIeWDbm4Mu3y3D8Qbhq_71hNQTA
+      responses:
+        401:
+          description: Le token n'a pas pu etre vérifié
+        200:
+          description: La verification a réussi. Le nom de l'utilisateur dont la session est identifiée via ce token renvoyé.
+          content:
+            'application/json':
+              schema:
+                type: string
+                example: VSX4Life
+
+  /authentication/{username}:
+    parameters:
+      - name: username
+        in: path
+        description: le username de l'investisseur (voir service 'investor.yaml' pour plus de détails)
+        schema:
+          type: string
+        required: true
+    post:
+      summary: Crée les credentials pour un investisseur donné
+      requestBody:
+        description: Credentials de l'investisseur
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/credentials'
+      responses:
+        400:
+          description: Les credentials sont invalides
+        409:
+          description: Les credentials existent déjà
+        201:
+          description: Les credentials ont correctement été créés
+    put:
+      summary: Mets à jour les credentials d'un investisseur existant
+      requestBody:
+        description: Credentials de l'investisseur
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/credentials'
+      responses:
+        400:
+          description: Les credentials sont invalides
+        404:
+          description: Les credentials n'ont pas pu être trouvés
+        200:
+          description: Les credentials ont été mis à jour
+
+    delete:
+      summary: Supprime les credentials d'un investisseur.
+      responses:
+        404:
+          description: Les credentials n'ont pas pu être trouvés
+        200:
+          description: Les credentials ont été supprimés
+
+components:
+  schemas:
+    credentials:
+      type: object
+      description: |
+        Les credentials sont les données d'identification d'un investisseur au sein du système.
+        Elles ne permettent que de dire que la personne existe et qu'elle s'est correctement identifié. 
+        Cela ne donne absolument aucune information sur la personne réelle.
+      properties:
+        username:
+          type: string
+          description: |
+            Le username est un nom choisi par l'utilisateur. Ce nom est utilisé 
+            comme identifiant unique au sein du système.
+        password:
+          type: string
+          description: |
+            Le mot de passe de l'utilisateur
+      example:
+        username: VSXRocks
+        password: password123

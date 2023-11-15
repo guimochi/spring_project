@@ -1,0 +1,107 @@
+openapi: 3.0.3
+info:
+  title: Execution service
+  description: |
+    Le service d'exécution recoit des transactions  à effectuer, et se charge de contacter les autres
+    services (Wallet, Order, Prices) pour refléter l'exécution de la transaction. Par exemple, lorsque
+    le service reçoit une requête pour exécuter le la transaction: 
+    "Etant donné les ordres #CAFECAFE et #DEADBEEF vendre 10 actions LNRD de Alice à Bob pour 5 CASH chacune" 
+    1. Le service _Execution_ va contacter le service _Wallet_ pour mettre à jour la quantité de CASH possédée par Alice
+    2. Le service _Execution_ va contacter le service _Wallet_ pour mettre à jour la quantité de CASH possédée par Bob
+    3. Le service _Execution_ va contacter le service _Wallet_ pour mettre à jour la quantité de LNRD possédée par Alice
+    4. Le service _Execution_ va contacter le service _Wallet_ pour mettre à jour la quantité de LNRD possédée par Bob
+    5. Le service _Execution_ va contacter le service _Price_  pour indiquer que le dernier prix de vente pour une action LNRD était de 5 CASH.
+    6. Le service _Execution_ va contacter le service _Order_ pour mettre à jour le statut de l'ordre #CAFECAFE
+    7. Le service _Execution_ va contacter le service _Order_ pour mettre à jour le statut de l'ordre #DEADBEEF
+  version: 1.0.0
+paths:
+
+  /execute/{ticker}/{seller}/{buyer}:
+    parameters:
+      - name: ticker
+        in: path
+        required: true
+        description: |
+          le ticker est un code alphanumérique (généralement sur 4 char) qui indentifie un instrument
+          financier de manière unique. (C'est une hypothèse simplificatrice: dans la pratique, seul le
+          code ISIN permet d'identifier un instrument financier de facon unique. Mais à nouveau, on considère
+          que c'est ok dans le cadre de ce projet)
+        example: AAPL
+        schema:
+          type: string
+      - name: seller
+        in: path
+        required: true
+        description: Username de l'investisseur qui vend
+        example: picsou
+        schema:
+          type: string
+      - name: buyer
+        in: path
+        required: true
+        description: Username de l'investisseur qui achète
+        example: cresus
+        schema:
+          type: string
+    post:
+      description:
+        Exécute une transaction d'une certaine quantité d'un instrument financier 
+        depuis un inverstisseur vers un autre pour un prix déterminé.
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/transaction'
+      responses:
+        200:
+          description: La transaction a été effectuée
+        400:
+          description: La transaction n'était pas correcte
+
+components:
+  schemas:
+    transaction:
+      description: Une transaction à effectuer
+      type: object
+      properties:
+        ticker:
+          description: |
+            le ticker est un code alphanumérique (généralement sur 4 char) qui indentifie un instrument
+            financier de manière unique. (C'est une hypothèse simplificatrice: dans la pratique, seul le 
+            code ISIN permet d'identifier un instrument financier de facon unique. Mais à nouveau, on considère
+            que c'est ok dans le cadre de ce projet)
+          type: string
+        seller:
+          description: Username de l'investisseur qui vend
+          type: string
+        buyer:
+          description: Username de l'investisseur qui achète
+          type: string
+        buy_order_guid:
+          description: GUID de l'ordre de vente qui a servi à faire cette transaction
+          type: string
+        sell_order_guid:
+          description: GUID de l'ordre d'achat qui a servi à faire cette transaction
+          type: string
+        quantity:
+          description: Quantité du titre qui est échangée
+          type: integer
+        price:
+          description: Prix auquel la transaction a été déterminée
+          type: number
+      required:
+        - ticker
+        - seller
+        - buyer
+        - buy_order_guid
+        - sell_order_guid
+        - quantity
+        - price
+      example:
+        ticker: AAPL
+        seller: picsous
+        buyer: cresus
+        buy_order_guid: 6B29FC40-CA47-1067-B31D-00DD010662DA
+        sell_order_guid: 550e8400-e29b-41d4-a716-446655440000
+        quantity: 10
+        price: 100.0
