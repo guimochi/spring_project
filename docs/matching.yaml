@@ -1,0 +1,43 @@
+openapi: 3.0.3
+info:
+  title: Matching service
+  description: |
+    Le role de ce service est d'identifier des groupes d'ordres qui peuvent être (partiellement) satisfaits
+    les uns par les autres. Lorsqu'un matching est effectué, ce service contacte le service d'exécution
+    et lui transmets les transactions qui doivent être effectuées.
+
+    **Note:**
+    Dans un monde idéal, ce service devrait être notifié de façon asynchrone via une file d'attente et devrait
+    traiter toutes ses requêtes de façon séquentielles. Sans ça, il est possible que le système crée des
+    inconsistances en utilisant plusieurs fois un même ordre pour en satisfaire plusieurs autres (a cause du
+    fait que plusieurs requetes peuvent être traitées de façon simultanée et que nous n'avons pas prévu de
+    système de verrouillage distribué). 
+    **DANS LE CADRE DE CE PROJET, ON VA CONSIDERER QUE CE N'EST PAS UN PROBLEME.** 
+    C'est un choix délibéré qui vise à vous faciliter la vie tout et à garder un scope raisonnable pour ce projet.
+
+  version: 1.0.0
+servers:
+  - url: 'https'
+paths:
+
+  /trigger/{ticker}:
+    parameters:
+      - name: ticker
+        in: path
+        required: true
+        description: |
+          le ticker est un code alphanumérique (généralement sur 4 char) qui indentifie un instrument
+          financier de manière unique. (C'est une hypothèse simplificatrice: dans la pratique, seul le
+          code ISIN permet d'identifier un instrument financier de facon unique. Mais à nouveau, on considère
+          que c'est ok dans le cadre de ce projet)
+        example: AAPL
+        schema:
+          type: string
+    post:
+      description:
+        Tente de trouver des correspondances d'ordres d'achat et de vente pour un certain instrument financier. 
+        Les ordres pour les correspondances sont récupérés depuis le service d'ordres.
+        Quand des correspondances ont été trouvées, contacte le service d'execution pour chaque transaction à effectuer.
+      responses:
+        200:
+          description: L'algorithme de matching s'est correctement déroulé.

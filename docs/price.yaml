@@ -1,0 +1,60 @@
+openapi: 3.0.3
+info:
+  title: Price service
+  description: |
+    La seule responsabilité du service _Price_ est de se rappeler le dernier prix d'échange (= prix market) pour
+    tous les titres en circulation sur la plateforme VSX. 
+
+    **Note:**
+    Votre plateforme ne doit pas gérer les IPO (initial public offer = introductions en bourse). De ce fait, 
+    et comme cela a été explicité dans les spécifications du projet, dans le cas (théorique) ou les ordres 
+    de Alice et Bob seraient les tout premiers ordres relatifs à des actions LNRD sur votre plateforme, 
+    alors on décidera par convention que le prix est de 1 euro par action (ça ne se passe pas comme ça dans 
+    la réalité, mais c'est la logique que vous devez implémenter).
+
+    En utilisant cette logique, et puisque tous les échanges sont libellés en CASH (il n'est donc pas possible
+    de vendre 1 CASH pour autre chose que 1 CASH), le 'prix' du CASH restera toujours fixé à 1 (pratique non ?).
+
+  version: 1.0.0
+servers:
+  - url: 'https'
+paths:
+  /price/{ticker}:
+    parameters:
+      - name: ticker
+        in: path
+        required: true
+        description: |
+          le ticker est un code alphanumérique (généralement sur 4 char) qui indentifie un instrument
+          financier de manière unique. (C'est une hypothèse simplificatrice: dans la pratique, seul le
+          code ISIN permet d'identifier un instrument financier de facon unique. Mais à nouveau, on considère
+          que c'est ok dans le cadre de ce projet)
+        example: AAPL
+        schema:
+          type: string
+    get:
+      description: Récupère le dernier prix enregistré pour un instrument financier
+      responses:
+        200:
+          description: Le prix de l'instrument financier
+          content:
+            'text/plain':
+              schema:
+                type: number
+                example: 100.0
+    patch:
+      description: Modifie le prix d'un instrument financier
+      requestBody:
+        description: Le nouveau prix
+        content:
+          'text/plain':
+            schema:
+              type: number
+              example: 100.0
+      responses:
+        200:
+          description: Le prix a été mis à jour
+        400:
+          description: Le prix n'était pas valide (négatif)
+
+  
