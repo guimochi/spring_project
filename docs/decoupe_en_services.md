@@ -7,16 +7,16 @@ faudra donc que chaque étudiant soit responsable de l'implémentation d'un serv
 ensembles.
 
 ### Petits services
-- Investor --> Antoine      port:3002
-- Authentication --> Sasha  port:3003
-- Order --> Gui             port:3004
-- Price --> Alicia          port:3005
+- Investor --> Antoine      port:9001
+- Authentication --> Sasha  port:9002
+- Order --> Gui             port:9003
+- Price --> Alicia          port:9004
 
 ### 'Gros' services
-- Wallet                    port:3006
-- Matching                  port:3007
-- Execution                 port:3008
-- Gateway                   port:3009
+- Wallet                    port:9005
+- Matching                  port:9006
+- Execution                 port:9007
+- Gateway                   port:9008
 
 --- La découpe en services commence ici ---------------------------------------------------------------
 
