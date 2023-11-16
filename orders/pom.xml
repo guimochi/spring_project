@@ -2,7 +2,7 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns="http://maven.apache.org/POM/4.0.0"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <artifactId>order</artifactId>
+  <artifactId>orders</artifactId>
   <build>
     <plugins>
       <plugin>
@@ -24,10 +24,6 @@
   </build>
   <dependencies>
     <dependency>
-      <artifactId>spring-boot-starter-jdbc</artifactId>
-      <groupId>org.springframework.boot</groupId>
-    </dependency>
-    <dependency>
       <artifactId>spring-boot-starter-web</artifactId>
       <groupId>org.springframework.boot</groupId>
     </dependency>
@@ -40,12 +36,12 @@
       <groupId>org.springframework.cloud</groupId>
     </dependency>
     <dependency>
-      <artifactId>spring-boot-starter-data-jpa</artifactId>
       <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-data-jpa</artifactId>
     </dependency>
     <dependency>
-      <artifactId>h2</artifactId>
       <groupId>com.h2database</groupId>
+      <artifactId>h2</artifactId>
       <scope>runtime</scope>
     </dependency>
     <dependency>
