@@ -13,10 +13,11 @@ ensembles.
 - Price --> Alicia          port:9004
 
 ### 'Gros' services
-- Wallet                    port:9005
-- Matching                  port:9006
-- Execution                 port:9007
-- Gateway                   port:9008
+
+- Wallet --> Sasha port:9005
+- Matching --> Gui port:9006
+- Execution -->  Alicia port:9007
+- Gateway -->  Antoine port:9008
 
 --- La découpe en services commence ici ---------------------------------------------------------------
 

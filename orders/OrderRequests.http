@@ -1,0 +1,33 @@
+### CREATE a new order
+POST {{order}}
+Content-Type: application/json
+
+{
+  "owner": "picsou",
+  "timestamp": 457696995,
+  "ticker": "LNRD",
+  "quantity": 10,
+  "side": "SELL",
+  "type": "LIMIT",
+  "limit": 100,
+  "filled": 5
+}
+
+### GET an order
+GET {{order}}/436ecd55-6449-488e-a281-76bee2c765fe
+
+### PATCH filled
+PATCH {{order}}/436ecd55-6449-488e-a281-76bee2c765fe
+Content-Type: application/json
+
+{
+  "filled": 2
+}
+
+
+### GET by username
+GET {{order}}/by-user/picsou
+
+
+### GET by ticker and side
+GET {{order}}/open/by-ticker/LNRD/BUY
