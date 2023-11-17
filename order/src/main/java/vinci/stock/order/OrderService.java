@@ -1,15 +1,15 @@
-package vinci.stock.orders;
+package vinci.stock.order;
 
 import org.springframework.stereotype.Service;
-import vinci.stock.orders.models.Order;
-import vinci.stock.orders.repositories.OrdersRepository;
+import vinci.stock.order.models.Order;
+import vinci.stock.order.repositories.OrderRepository;
 
 @Service
-public class OrdersService {
+public class OrderService {
 
-  private final OrdersRepository repository;
+  private final OrderRepository repository;
 
-  public OrdersService(OrdersRepository repository) {
+  public OrderService(OrderRepository repository) {
     this.repository = repository;
   }
 

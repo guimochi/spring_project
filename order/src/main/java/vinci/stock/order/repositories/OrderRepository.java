@@ -1,13 +1,13 @@
-package vinci.stock.orders.repositories;
+package vinci.stock.order.repositories;
 
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
-import vinci.stock.orders.models.Order;
+import vinci.stock.order.models.Order;
 
 @Repository
-public interface OrdersRepository extends CrudRepository<Order, String> {
+public interface OrderRepository extends CrudRepository<Order, String> {
 
   Iterable<Order> findByOwner(String username);
 
