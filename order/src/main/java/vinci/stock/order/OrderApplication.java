@@ -1,4 +1,4 @@
-package vinci.stock.orders;
+package vinci.stock.order;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -8,10 +8,10 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @EnableDiscoveryClient
 @SpringBootApplication
 @EnableFeignClients
-public class OrdersApplication {
+public class OrderApplication {
 
   public static void main(String[] args) {
-    SpringApplication.run(OrdersApplication.class, args);
+    SpringApplication.run(OrderApplication.class, args);
   }
 
 }

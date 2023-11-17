@@ -1,4 +1,4 @@
-package vinci.stock.orders.models;
+package vinci.stock.order.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

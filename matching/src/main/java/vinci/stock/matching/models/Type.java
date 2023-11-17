@@ -1,4 +1,4 @@
-package vinci.stock.orders.models;
+package vinci.stock.matching.models;
 
 public enum Type {
   MARKET, LIMIT

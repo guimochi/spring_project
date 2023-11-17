@@ -1,4 +1,4 @@
-package vinci.stock.orders;
+package vinci.stock.order;
 
 
 import org.springframework.http.ResponseEntity;
@@ -8,16 +8,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import vinci.stock.orders.models.FilledUpdateRequest;
-import vinci.stock.orders.models.Order;
+import vinci.stock.order.models.FilledUpdateRequest;
+import vinci.stock.order.models.Order;
 
 
 @RestController
-public class OrdersController {
+public class OrderController {
 
-  private final OrdersService service;
+  private final OrderService service;
 
-  public OrdersController(OrdersService service) {
+  public OrderController(OrderService service) {
     this.service = service;
   }
 

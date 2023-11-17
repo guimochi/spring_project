@@ -1,10 +1,10 @@
-package vinci.stock.orders;
+package vinci.stock.order;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class OrdersApplicationTests {
+class OrderApplicationTests {
 
   @Test
   void contextLoads() {
