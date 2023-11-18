@@ -20,6 +20,12 @@ public class MatchingService {
   public void match(String ticker) {
     Iterable<Order> ordersSideBuy = orderProxy.readAllOpenByTickerAndSide(ticker,
         Side.BUY.toString()).getBody();
+
+//    PriorityQueue<Order> ordersSideBuySorted = new PriorityQueue<Order>();
+//    assert ordersSideBuy != null;
+//    for (Order order : ordersSideBuy) {
+//      ordersSideBuySorted.add(order);
+//    }
     Iterable<Order> ordersSideSell = orderProxy.readAllOpenByTickerAndSide(ticker,
         Side.SELL.toString()).getBody();
 //    TODO: implement matching algorithm
