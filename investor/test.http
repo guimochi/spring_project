@@ -1,0 +1,17 @@
+###
+GET http://localhost:9001/investor/{{username}}
+
+###
+POST http://localhost:9001/investor/{{username}}
+Content-Type: application/json
+
+{
+  "investor_data": {
+    "username": "picsou",
+    "email": "picsou@canardville.com",
+    "firstname": "Scrooge",
+    "lastname": "McDuck",
+    "birthdate": "15/12/1947"
+  },
+  "password": "get_rich_fast"
+}
