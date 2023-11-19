@@ -7,11 +7,26 @@ Content-Type: application/json
 
 {
   "investor_data": {
-    "username": "picsou",
-    "email": "picsou@canardville.com",
-    "firstname": "Scrooge",
-    "lastname": "McDuck",
+    "username": "pica",
+    "email": "piceou@canardville.com",
+    "firstname": "Scerooge",
+    "lastname": "MzcDuck",
     "birthdate": "15/12/1947"
   },
   "password": "get_rich_fast"
 }
+
+###
+PUT http://localhost:9001/investor/{{username}}
+Content-Type: application/json
+
+{
+    "username": "pica",
+    "email":"piceou@canardvidzadddadaadalle.com",
+    "firstname": "dadda",
+    "lastname": "MzcDuckz",
+    "birthdate": "30/12/2022"
+}
+
+###
+DELETE http://localhost:9001/investor/{{username}}

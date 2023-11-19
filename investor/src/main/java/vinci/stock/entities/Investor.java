@@ -33,12 +33,30 @@ public class Investor {
 
 
     public boolean isValid() {
-        return username != null && email != null && firstname != null && lastname != null && birthdate != null
-                && !username.isEmpty() && !email.isEmpty() && !firstname.isEmpty() && !lastname.isEmpty()
-                && !birthdate.toString().isEmpty() && isEmailValid();
+        return  isEmailValid() && isUsernameValid() && isFirstnameValid()
+                && isLastnameValid() && isBirthdateValid();
     }
 
+    private boolean isUsernameValid() {
+        return username != null && !username.isEmpty()
+                && username.matches("^[a-zA-Z0-9_]{3,30}$");
+    }
     private boolean isEmailValid() {
-        return email.matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$");
+        return email != null && !email.isEmpty()
+                && email.matches("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$");
+    }
+    private boolean isFirstnameValid() {
+        return firstname != null && !firstname.isEmpty()
+                && firstname.matches("^[a-zA-Z0-9_]{3,20}$");
+    }
+
+    private boolean isLastnameValid() {
+        return lastname != null && !lastname.isEmpty()
+                && lastname.matches("^[a-zA-Z0-9_]{3,20}$");
+    }
+
+    private boolean isBirthdateValid() {
+        return birthdate != null && !birthdate.isBefore(LocalDate.of(1900, 1, 1))
+                && !birthdate.isAfter(LocalDate.now());
     }
 }

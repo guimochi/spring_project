@@ -35,8 +35,12 @@ public class InvestorService {
         } catch (FeignException e) {
             return false;
         }
-        investorRepository.save(investorData.toInvestor());
-        return true;
+        Optional<Investor> investor = investorData.toInvestor();
+
+        return investor.map(value -> {
+            investorRepository.save(value);
+            return true;
+        }).orElse(false);
     }
 
     public Optional<Investor> readOne(String username) {
@@ -52,9 +56,9 @@ public class InvestorService {
 
     public boolean deleteOne(String username) {
         if (!investorRepository.existsById(username)) return false;
-        if (this.walletProxy.readOne(username).iterator().hasNext()) return false;
+        //if (this.walletProxy.readOne(username).iterator().hasNext()) return false;
         try {
-            authentificationProxy.deleteCredentials(username);
+            //authentificationProxy.deleteCredentials(username);
         } catch (FeignException e) {
             return false;
         }

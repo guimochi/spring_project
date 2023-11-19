@@ -4,10 +4,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.format.datetime.DateFormatter;
 import vinci.stock.entities.Investor;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 
 @Getter
 @Setter
@@ -20,9 +22,15 @@ public class InvestorData {
     private String lastname;
     private String birthdate;
 
-    public Investor toInvestor() {
+    public Optional<Investor> toInvestor() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        return new Investor(username, email, firstname, lastname, LocalDate.parse(birthdate, formatter));
+        try {
+            LocalDate parsedBd = LocalDate.parse(this.birthdate, formatter);
+            return Optional.of(new Investor(username, email, firstname, lastname, parsedBd));
+        } catch (Exception e) {
+            return Optional.empty();
+        }
     }
+
 
 }
