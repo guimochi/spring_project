@@ -10,7 +10,7 @@ import lombok.ToString;
 @Setter
 @ToString
 @NoArgsConstructor
-public class Order {
+public class Order implements Comparable<Order> {
 
   private String guid;
 
@@ -22,48 +22,47 @@ public class Order {
 
   private int quantity;
 
-  private String side;
+  private Side side;
 
-  private String type;
+  private Type type;
 
-  private int limit;
+  private double limit;
 
   private int filled;
 
-  public boolean valid() {
-    if (this.getGuid() != null) {
-      return false;
+  /**
+   * Compares the order. Check the type first. Return the market order Then check side. If buy,
+   * return the lowest If sell, return the highest In case of tie, return the oldest
+   *
+   * @param o the object to be compared.
+   * @return
+   */
+  @Override
+  public int compareTo(Order o) {
+    if (this.getType() == Type.MARKET && o.getType() == Type.MARKET) {
+      return this.getTimestamp().compareTo(o.getTimestamp());
     }
-    if (this.getOwner() == null || this.getOwner().isEmpty()) {
-      return false;
+    if (o.getType() == Type.MARKET) {
+      return 1;
     }
-    if (this.getTimestamp() == null) {
-      return false;
+    if (this.getType() == Type.MARKET) {
+      return -1;
     }
-    if (this.getTicker() == null || this.getTicker().isEmpty()) {
-      return false;
+    if (this.getSide() == Side.BUY) {
+      int compare = Double.compare(this.getLimit(), o.getLimit());
+      if (compare != 0) {
+        return compare;
+      }
+      return this.getTimestamp().compareTo(o.getTimestamp());
     }
-    if (this.getSide() == null || this.getSide().isEmpty()) {
-      return false;
+    int compare = Double.compare(o.getLimit(), this.getLimit());
+    if (compare != 0) {
+      return compare;
     }
-    if (this.getType() == null || this.getType().isEmpty()) {
-      return false;
-    }
-    if (this.getQuantity() <= 0) {
-      return false;
-    }
-    if (this.getFilled() < 0) {
-      return false;
-    }
-    try {
-      Side.valueOf(this.getSide());
-      Type.valueOf(this.getType());
-    } catch (IllegalArgumentException e) {
-      return false;
-    }
-    if (Type.valueOf(this.getType()) == Type.LIMIT && this.getLimit() <= 0) {
-      return false;
-    }
-    return true;
+    return this.getTimestamp().compareTo(o.getTimestamp());
+  }
+
+  public boolean checkOpen() {
+    return this.getFilled() < this.getQuantity();
   }
 }
