@@ -18,12 +18,12 @@ public class OrderService {
     return repository.findById(guid).orElse(null);
   }
 
-  public boolean patchOne(String guid, int filled) {
+  public boolean addFilledQuantity(String guid, int filled) {
     Order order = repository.findById(guid).orElse(null);
     if (order == null) {
       return false;
     }
-    order.setFilled(filled);
+    order.setFilled(order.getFilled() + filled);
     repository.save(order);
     return true;
   }
