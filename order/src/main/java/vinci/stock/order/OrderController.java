@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import vinci.stock.order.models.FilledUpdateRequest;
 import vinci.stock.order.models.Order;
+import vinci.stock.order.models.Side;
 
 
 @RestController
@@ -60,7 +61,7 @@ public class OrderController {
 
   @GetMapping("/order/open/by-ticker/{ticker}/{side}")
   public ResponseEntity<Iterable<Order>> readAllOpenByTickerAndSide(@PathVariable String ticker,
-      @PathVariable String side) {
+      @PathVariable Side side) {
     Iterable<Order> orders = service.readAllOpenByTickerAndSide(ticker, side);
     return ResponseEntity.ok(orders);
   }

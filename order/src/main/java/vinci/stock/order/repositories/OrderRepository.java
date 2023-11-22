@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 import vinci.stock.order.models.Order;
+import vinci.stock.order.models.Side;
 
 @Repository
 public interface OrderRepository extends CrudRepository<Order, String> {
@@ -13,7 +14,7 @@ public interface OrderRepository extends CrudRepository<Order, String> {
 
 
   @Query("SELECT o FROM orders o WHERE o.ticker = ?1 AND o.side = ?2 AND o.filled < o.quantity")
-  Iterable<Order> findByTickerAndSideWhereIsOpen(String ticker, String side);
+  Iterable<Order> findByTickerAndSideWhereIsOpen(String ticker, Side side);
 
 
 }

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import vinci.stock.matching.models.Order;
+import vinci.stock.matching.models.Side;
 
 @Repository
 @FeignClient(name = "order")
@@ -13,7 +14,6 @@ public interface OrderProxy {
 
   @GetMapping("/order/open/by-ticker/{ticker}/{side}")
   ResponseEntity<Iterable<Order>> readAllOpenByTickerAndSide(@PathVariable String ticker,
-      @PathVariable String side);
-
+      @PathVariable Side side);
 }
 

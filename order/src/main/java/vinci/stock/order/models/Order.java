@@ -2,6 +2,7 @@ package vinci.stock.order.models;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -36,14 +37,16 @@ public class Order {
   @Column(nullable = false)
   private int quantity;
 
+  @Enumerated
   @Column(nullable = false)
-  private String side;
+  private Side side;
 
+  @Enumerated
   @Column(nullable = false)
-  private String type;
+  private Type type;
 
   @Column(name = "_limit")
-  private int limit;
+  private double limit;
 
   @Column()
   private int filled;
@@ -52,19 +55,19 @@ public class Order {
     if (this.getGuid() != null) {
       return false;
     }
-    if (this.getOwner() == null || this.getOwner().isEmpty()) {
+    if (this.getOwner() == null || this.getOwner().trim().isEmpty()) {
       return false;
     }
     if (this.getTimestamp() == null) {
       return false;
     }
-    if (this.getTicker() == null || this.getTicker().isEmpty()) {
+    if (this.getTicker() == null || this.getTicker().trim().isEmpty()) {
       return false;
     }
-    if (this.getSide() == null || this.getSide().isEmpty()) {
+    if (this.getSide() == null) {
       return false;
     }
-    if (this.getType() == null || this.getType().isEmpty()) {
+    if (this.getType() == null) {
       return false;
     }
     if (this.getQuantity() <= 0) {
@@ -73,13 +76,7 @@ public class Order {
     if (this.getFilled() < 0) {
       return false;
     }
-    try {
-      Side.valueOf(this.getSide());
-      Type.valueOf(this.getType());
-    } catch (IllegalArgumentException e) {
-      return false;
-    }
-    if (Type.valueOf(this.getType()) == Type.LIMIT && this.getLimit() <= 0) {
+    if (this.getType() == Type.LIMIT && this.getLimit() <= 0) {
       return false;
     }
     return true;

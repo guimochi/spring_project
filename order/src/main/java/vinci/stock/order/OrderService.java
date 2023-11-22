@@ -2,6 +2,7 @@ package vinci.stock.order;
 
 import org.springframework.stereotype.Service;
 import vinci.stock.order.models.Order;
+import vinci.stock.order.models.Side;
 import vinci.stock.order.repositories.OrderRepository;
 
 @Service
@@ -31,7 +32,7 @@ public class OrderService {
     return repository.findByOwner(username);
   }
 
-  public Iterable<Order> readAllOpenByTickerAndSide(String ticker, String side) {
+  public Iterable<Order> readAllOpenByTickerAndSide(String ticker, Side side) {
     return repository.findByTickerAndSideWhereIsOpen(ticker, side);
   }
 
