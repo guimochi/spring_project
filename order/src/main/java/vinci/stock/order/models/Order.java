@@ -51,7 +51,7 @@ public class Order {
   @Column()
   private int filled;
 
-  public boolean valid() {
+  public boolean checkValid() {
     if (this.getGuid() != null) {
       return false;
     }

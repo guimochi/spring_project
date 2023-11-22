@@ -24,7 +24,7 @@ public class OrderController {
 
   @PostMapping("/order")
   public ResponseEntity<Order> createOne(@RequestBody Order order) {
-    if (order == null || !order.valid()) {
+    if (order == null || !order.checkValid()) {
       return ResponseEntity.badRequest().build();
     }
     Order createdOrder = service.createOne(order);
@@ -43,9 +43,9 @@ public class OrderController {
   //permet au système de mettre à jour la quantité d'action qui a déjà été échangée suite à cet
   // ordre.
   @PatchMapping("/order/{guid}")
-  public ResponseEntity<Void> patchOne(@PathVariable String guid,
+  public ResponseEntity<Void> addFilledQuantity(@PathVariable String guid,
       @RequestBody FilledUpdateRequest request) {
-    boolean updated = service.patchOne(guid, request.getFilled());
+    boolean updated = service.addFilledQuantity(guid, request.getFilled());
     if (!updated) {
       return ResponseEntity.notFound().build();
     }
