@@ -33,13 +33,11 @@ public class ExecutionService {
         positionsBuyer.add(new Position(transaction.getBuyer(), transaction.getTicker(), -transaction.getQuantity(), transaction.getPrice()));
 
         try {
-            //walletProxy.updateOne(transaction.getSeller(), positionsSeller);
-            //walletProxy.updateOne(transaction.getBuyer(), positionsBuyer);
-            orderProxy.getOne(transaction.getSellOrderGuid());
-            System.out.println("SELL ORDER GUID: " + transaction.getSellOrderGuid());
+            //walletProxy.updateOne(transaction.getSeller(), positionsSeller); TODO
+            //walletProxy.updateOne(transaction.getBuyer(), positionsBuyer); TODO
             orderProxy.updateOne(transaction.getSellOrderGuid(), new FilledUpdateRequest(transaction.getQuantity()));
             orderProxy.updateOne(transaction.getBuyOrderGuid(), new FilledUpdateRequest(transaction.getQuantity()));
-            //priceProxy.updateOne(transaction.getTicker(), transaction.getPrice());
+            priceProxy.updateOne(transaction.getTicker(), transaction.getPrice());
             return true;
         } catch (FeignException e) {
             System.out.println(e.getMessage());

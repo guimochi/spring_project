@@ -1,23 +1,38 @@
-### CREATE a new order
+### CREATE a new order for user test SELL
 POST {{order}}
 Content-Type: application/json
 
 {
-  "owner": "picsou",
+  "owner": "test",
   "timestamp": 457696995,
   "ticker": "LNRD",
   "quantity": 10,
   "side": "SELL",
   "type": "LIMIT",
   "limit": 100,
-  "filled": 5
+  "filled": 0
+}
+
+### CREATE a new order for user test2 BUY
+POST {{order}}
+Content-Type: application/json
+
+{
+  "owner": "test2",
+  "timestamp": 457696995,
+  "ticker": "LNRD",
+  "quantity": 10,
+  "side": "BUY",
+  "type": "LIMIT",
+  "limit": 100,
+  "filled": 0
 }
 
 ### GET an order
-GET {{order}}/436ecd55-6449-488e-a281-76bee2c765fe
+GET {{order}}/54a82a00-951f-4039-84ea-1b6feff253b5
 
 ### PATCH filled
-PATCH {{order}}/436ecd55-6449-488e-a281-76bee2c765fe
+PATCH {{order}}/c9153b71-271f-426c-a8bb-49d37658968f
 Content-Type: application/json
 
 {
@@ -30,4 +45,4 @@ GET {{order}}/by-user/picsou
 
 
 ### GET by ticker and side
-GET {{order}}/open/by-ticker/LNRD/BUY
+GET {{order}}/open/by-ticker/LNRD/SELL
