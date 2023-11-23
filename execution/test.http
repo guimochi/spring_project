@@ -1,0 +1,13 @@
+###
+POST http://localhost:9007/execution/AAPL/test/test2
+Content-Type: application/json
+
+{
+  "ticker": "AAPL",
+  "seller": "test",
+  "buyer": "test2",
+  "buy_order_guid": "519bc203-fddc-4556-9484-b99f75d08733",
+  "sell_order_guid": "25818953-1035-45ab-ac2d-eff325bbec09",
+  "quantity": 3,
+  "price": 100
+}
