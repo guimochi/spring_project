@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import vinci.stock.order.models.FilledUpdateRequest;
 import vinci.stock.order.models.Order;
+import vinci.stock.order.models.Side;
 
 
 @RestController
@@ -23,7 +24,7 @@ public class OrderController {
 
   @PostMapping("/order")
   public ResponseEntity<Order> createOne(@RequestBody Order order) {
-    if (order == null || !order.valid()) {
+    if (order == null || !order.checkValid()) {
       return ResponseEntity.badRequest().build();
     }
     Order createdOrder = service.createOne(order);
@@ -42,9 +43,9 @@ public class OrderController {
   //permet au système de mettre à jour la quantité d'action qui a déjà été échangée suite à cet
   // ordre.
   @PatchMapping("/order/{guid}")
-  public ResponseEntity<Void> patchOne(@PathVariable String guid,
+  public ResponseEntity<Void> addFilledQuantity(@PathVariable String guid,
       @RequestBody FilledUpdateRequest request) {
-    boolean updated = service.patchOne(guid, request.getFilled());
+    boolean updated = service.addFilledQuantity(guid, request.getFilled());
     if (!updated) {
       return ResponseEntity.notFound().build();
     }
@@ -60,7 +61,7 @@ public class OrderController {
 
   @GetMapping("/order/open/by-ticker/{ticker}/{side}")
   public ResponseEntity<Iterable<Order>> readAllOpenByTickerAndSide(@PathVariable String ticker,
-      @PathVariable String side) {
+      @PathVariable Side side) {
     Iterable<Order> orders = service.readAllOpenByTickerAndSide(ticker, side);
     return ResponseEntity.ok(orders);
   }
