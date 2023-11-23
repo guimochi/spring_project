@@ -1,0 +1,13 @@
+###
+POST http://localhost:9007/execution/LNRD/test/test2
+Content-Type: application/json
+
+{
+  "ticker": "LNRD",
+  "seller": "test",
+  "buyer": "test2",
+  "buy_order_guid": "032bc362-70f7-444f-959a-97540cc00789",
+  "sell_order_guid": "24d41f06-0842-4f67-8bac-fd1ee6ce8900",
+  "quantity": 3,
+  "price": 100
+}
