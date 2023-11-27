@@ -2,12 +2,14 @@ package vinci.stock.gateway;
 
 import feign.FeignException;
 import vinci.stock.gateway.data.AuthenticationProxy;
+import vinci.stock.gateway.data.InvestorProxy;
 import vinci.stock.gateway.data.OrderProxy;
 import vinci.stock.gateway.data.WalletProxy;
 import org.springframework.stereotype.Service;
 import vinci.stock.gateway.exceptions.BadRequestException;
 import vinci.stock.gateway.exceptions.UnauthorizedException;
 import vinci.stock.gateway.models.Credentials;
+import vinci.stock.gateway.models.InvestorData;
 
 @Service
 public class GatewayService {
@@ -15,11 +17,14 @@ public class GatewayService {
   private final OrderProxy orderProxy;
   private final WalletProxy walletProxy;
 
+  private final InvestorProxy investorProxy;
 
-  public GatewayService(AuthenticationProxy authenticationProxy, OrderProxy orderProxy, WalletProxy walletProxy) {
+
+  public GatewayService(AuthenticationProxy authenticationProxy, OrderProxy orderProxy, WalletProxy walletProxy, InvestorProxy investorProxy) {
     this.authenticationProxy = authenticationProxy;
     this.orderProxy = orderProxy;
     this.walletProxy = walletProxy;
+    this.investorProxy = investorProxy;
   }
 
   /**
@@ -53,5 +58,9 @@ public class GatewayService {
       if (e.status() == 401) return null;
       else throw e;
     }
+  }
+
+  public InvestorData readInvestorInfo(String username) {
+    return investorProxy.readOne(username);
   }
 }
