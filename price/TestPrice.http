@@ -4,19 +4,19 @@ http://localhost:9004/price/LNRD
 http://localhost:9004/price/ABCD
 
 ### PATCH price in db
-PATCH http://localhost:9004/price/LNRD
+PATCH {{price}}/LNRD
 Content-Type: application/json
 
 999
 
 ### PATCH price not in db
-PATCH http://localhost:9004/price/ABCD
+PATCH {{price}}/ABCD
 Content-Type: application/json
 
 700
 
 ### GET Price updated that was not in db
-GET http://localhost:9004/price/ABCD
+GET {{price}}/ABCD
 
 
 
