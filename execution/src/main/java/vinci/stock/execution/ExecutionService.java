@@ -39,8 +39,8 @@ public class ExecutionService {
             transaction.getPrice()));
 
     try {
-      //walletProxy.updateOne(transaction.getSeller(), positionsSeller);
-      //walletProxy.updateOne(transaction.getBuyer(), positionsBuyer);
+      walletProxy.updateOne(transaction.getSeller(), positionsSeller);
+      walletProxy.updateOne(transaction.getBuyer(), positionsBuyer);
       orderProxy.updateOne(transaction.getSellOrderGuid(),
           new FilledUpdateRequest(transaction.getQuantity()));
       orderProxy.updateOne(transaction.getBuyOrderGuid(),
