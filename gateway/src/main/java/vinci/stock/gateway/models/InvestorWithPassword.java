@@ -1,0 +1,28 @@
+package vinci.stock.gateway.models;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class InvestorWithPassword extends InvestorData {
+  private String password;
+
+  /**
+   * Convert this object to an InvestorData object.
+   * @return InvestorData
+   */
+  public InvestorData toInvestor() {
+    return new InvestorData(
+      this.getUsername(),
+      this.getEmail(),
+      this.getFirstName(),
+      this.getLastName(),
+      this.getBirthDate()
+    );
+  }
+}
