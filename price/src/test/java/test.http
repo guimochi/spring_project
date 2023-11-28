@@ -1,22 +1,22 @@
 ### GET PRICE in db
-http://localhost:9002/price/LNRD
+http://localhost:9004/price/LNRD
 ### GET PRICE not in db
-http://localhost:9002/price/ABCD
+http://localhost:9004/price/ABCD
 
 ### PATCH price in db
-PATCH http://localhost:9002/price/LNRD
+PATCH http://localhost:9004/price/LNRD
 Content-Type: application/json
 
 999
 
 ### PATCH price not in db
-PATCH http://localhost:9002/price/ABCD
+PATCH http://localhost:9004/price/ABCD
 Content-Type: application/json
 
 700
 
 ### GET Price updated that was not in db
-GET http://localhost:9002/price/ABCD
+GET http://localhost:9004/price/ABCD
 
 
 
