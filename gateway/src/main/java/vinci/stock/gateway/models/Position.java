@@ -1,6 +1,5 @@
 package vinci.stock.gateway.models;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -8,8 +7,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
-public class Credentials {
-    private String username;
-    private String password;
+public class Position {
+  private String ticker;
+  private int quantity;
+  private int unitValue;
 }
