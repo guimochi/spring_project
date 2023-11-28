@@ -13,9 +13,9 @@ import vinci.stock.dto.Credentials;
 public interface AuthentificationProxy {
 
 
-    @PostMapping("/authentication/{username}")
-    void createCredentials(@PathVariable String username, @RequestBody Credentials credentials);
+  @PostMapping("/authentication/{username}")
+  void createCredentials(@PathVariable String username, @RequestBody Credentials credentials);
 
-    @DeleteMapping("/authentication/{username}")
-    void deleteCredentials(@PathVariable String username);
+  @DeleteMapping("/authentication/{username}")
+  void deleteCredentials(@PathVariable String username);
 }

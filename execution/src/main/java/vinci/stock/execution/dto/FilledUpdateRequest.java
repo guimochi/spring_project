@@ -11,7 +11,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class FilledUpdateRequest {
 
-    private int filled;
+  private int filled;
 
 }
 

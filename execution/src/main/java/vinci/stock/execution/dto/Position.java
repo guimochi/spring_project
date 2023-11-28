@@ -11,9 +11,10 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Position {
-    private String username;
-    private String ticker;
-    private int quantity;
-    private double unitValue;
+
+  private String username;
+  private String ticker;
+  private int quantity;
+  private double unitValue;
 
 }
