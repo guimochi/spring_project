@@ -10,8 +10,9 @@ import lombok.ToString;
 @Setter
 @ToString
 @NoArgsConstructor
-public class InvestorCreate {
-    @JsonProperty("investor_data")
-    private InvestorData investorData;
-    private String password;
+public class InvestorWithPassword {
+
+  @JsonProperty("investor_data")
+  private InvestorData investorData;
+  private String password;
 }
