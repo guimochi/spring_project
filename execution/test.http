@@ -1,13 +1,50 @@
+### CREATE a new order for user test SELL
+POST {{order}}
+Content-Type: application/json
+
+{
+  "owner": "test",
+  "timestamp": 457696995,
+  "ticker": "LNRD",
+  "quantity": 10,
+  "side": "SELL",
+  "type": "LIMIT",
+  "limit": 100,
+  "filled": 0
+}
+
+### CREATE a new order for user test2 BUY
+POST {{order}}
+Content-Type: application/json
+
+{
+  "owner": "test2",
+  "timestamp": 457696995,
+  "ticker": "LNRD",
+  "quantity": 10,
+  "side": "BUY",
+  "type": "LIMIT",
+  "limit": 100,
+  "filled": 0
+}
+
+
 ###
-POST http://localhost:9007/execution/LNRD/test/test2
+POST {{execution}}/LNRD/test/test2
 Content-Type: application/json
 
 {
   "ticker": "LNRD",
   "seller": "test",
   "buyer": "test2",
-  "buy_order_guid": "032bc362-70f7-444f-959a-97540cc00789",
-  "sell_order_guid": "24d41f06-0842-4f67-8bac-fd1ee6ce8900",
+  "sell_order_guid": "410c4b90-88ec-4677-afd3-071d2dbfea53",
+  "buy_order_guid": "317faf38-d2ae-4335-997f-8af7f84a9f31",
   "quantity": 3,
   "price": 100
 }
+
+### GET by username test
+GET {{order}}/by-user/test
+
+### GET by username test2
+GET {{order}}/by-user/test2
