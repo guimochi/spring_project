@@ -1,8 +1,8 @@
 ###
-GET http://localhost:9001/investor/{{username}}
+GET {{investor}}/pica
 
 ###
-POST http://localhost:9001/investor/{{username}}
+POST {{investor}}/pica
 Content-Type: application/json
 
 {
@@ -17,16 +17,16 @@ Content-Type: application/json
 }
 
 ###
-PUT http://localhost:9001/investor/{{username}}
+PUT {{investor}}/pica
 Content-Type: application/json
 
 {
-    "username": "pica",
-    "email":"piceou@canardvidzadddadaadalle.com",
-    "firstname": "dadda",
-    "lastname": "MzcDuckz",
-    "birthdate": "30/12/2022"
+  "username": "pica",
+  "email": "piceou@a.com",
+  "firstname": "abc",
+  "lastname": "MzcDuckz",
+  "birthdate": "30/12/2022"
 }
 
 ###
-DELETE http://localhost:9001/investor/{{username}}
+DELETE {{investor}}/pica

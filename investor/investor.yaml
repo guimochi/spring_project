@@ -16,7 +16,7 @@ paths:
         in: path
         description: le username de l'investisseur (plus d'infos, voir '#/components/schemas/investor_data')
         required: true
-        schema: 
+        schema:
           type: string
     get:
       summary: Récupère les informations relatives à un investisseur donné
@@ -29,7 +29,7 @@ paths:
             'application/json':
               schema:
                 $ref: '#/components/schemas/investor_data'
-    post: 
+    post:
       summary: Crée un nouvel investisseur dans le système
       requestBody:
         description: |
@@ -72,7 +72,7 @@ paths:
         Toutefois, l'historique des ordres et des transactions qui ont été passées par l'investisseur continue
         d'exister au sein du système.
       responses:
-        400: 
+        400:
           description: La situation de l'investisseur ne permet actuellement pas de supprimer son compte
         404:
           description: Les credentials n'ont pas pu être trouvés
@@ -88,7 +88,7 @@ components:
         Dans une application réelle, les investordata comprendraient une série d'information
         relatives au profil d'investisseur MIFID etc... Ici on se contentera de ne garder que
         son nom, prénom, date de naissance, email et username.
-    
+        
         **Note** La plupart de ces information ne sera pas réellement utilisé dans notre système de 
         trading. Mais ces données personnelles seraient cruciales dans le cas d'une application de 
         trading réelle. Dans ce cas, il aurait fallu prendre en compte les prescription du RGPD pour

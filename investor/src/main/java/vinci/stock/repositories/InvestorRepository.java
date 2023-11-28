@@ -6,4 +6,5 @@ import vinci.stock.entities.Investor;
 
 @Repository
 public interface InvestorRepository extends CrudRepository<Investor, String> {
+
 }
