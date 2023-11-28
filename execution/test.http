@@ -37,10 +37,10 @@ Content-Type: application/json
   "ticker": "LNRD",
   "seller": "test",
   "buyer": "test2",
-  "sell_order_guid": "410c4b90-88ec-4677-afd3-071d2dbfea53",
-  "buy_order_guid": "317faf38-d2ae-4335-997f-8af7f84a9f31",
-  "quantity": 3,
-  "price": 100
+  "sell_order_guid": "b35588cc-2084-4ef5-b3a4-e3d593841f34",
+  "buy_order_guid": "eb111b7c-4578-4163-93bd-b5939c8dc927",
+  "quantity": -1,
+  "price": 1
 }
 
 ### GET by username test
@@ -48,3 +48,6 @@ GET {{order}}/by-user/test
 
 ### GET by username test2
 GET {{order}}/by-user/test2
+
+### GET price by ticker LNRD
+GET {{price}}/LNRD
