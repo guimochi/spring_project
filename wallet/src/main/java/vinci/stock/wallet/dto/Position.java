@@ -1,21 +1,17 @@
-package vinci.stock.wallet.entities;
+package vinci.stock.wallet.dto;
 
-import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
-@Entity(name = "position")
+@AllArgsConstructor
 public class Position {
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(nullable = false)
-    private String guid;
 
-    
+    private String ticker;
+    private int quantity;
+    private double unitValue;
+
+
 }
