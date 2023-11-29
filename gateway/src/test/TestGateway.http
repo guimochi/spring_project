@@ -1,4 +1,3 @@
-///////////////////////////////////// INVESTOR //////////////////////////////////////
 
 ### POST /investor/{username} - Create investor 1 (success)
 POST {{gateway}}/investor/pica
@@ -81,7 +80,6 @@ Content-Type: application/json
 ### DELETE /investor/{username} - Delete investor (success)
 DELETE {{gateway}}/investor/investor2
 
-///////////////////////////////////// AUTH /////////////////////////////////////////
 ### POST /authentication/connect - Connect investor (success)
 POST {{gateway}}/authentication/connect
 Content-Type: application/json
@@ -100,14 +98,32 @@ Content-Type: application/json
   "password": "get_rich_faster"
 }
 
-//////////////////////////////////// ORDER /////////////////////////////////////////
 ### POST /order - Create order (success)
 POST {{gateway}}/order
 Content-Type: application/json
 
 {
-  //TODO
+  "owner": "test2",
+  "timestamp": 457696995,
+  "ticker": "NVDA",
+  "quantity": 10,
+  "side": "BUY",
+  "type": "LIMIT",
+  "limit": 100,
+  "filled": 0
 }
 
-//////////////////////////////////// WALLET ////////////////////////////////////////
+### POST /investor/{username} - Create investor with existing username (error 409)
+POST {{gateway}}/investor/pica
+Content-Type: application/json
 
+{
+  "investor_data": {
+    "username": "investor2",
+    "email": "investor2@gmail.com",
+    "firstname": "test",
+    "lastname":"test",
+    "birthdate": "20/01/2020"
+  },
+  "password": "password"
+}
