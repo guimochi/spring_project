@@ -26,7 +26,6 @@ public class GatewayService {
 
   private final InvestorProxy investorProxy;
 
-
   public GatewayService(AuthenticationProxy authenticationProxy, OrderProxy orderProxy,
       WalletProxy walletProxy, InvestorProxy investorProxy) {
     this.authenticationProxy = authenticationProxy;

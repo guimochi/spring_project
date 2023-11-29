@@ -1,0 +1,2 @@
+### GET /investor/{username} - Get investor by username (success)
+{{gateway}}/investor/picsou

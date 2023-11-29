@@ -15,7 +15,7 @@ Content-Type: application/json
 
 700
 
-### GET Price updated that was not in db
+### GET Price updated that was not in db (now in db)
 GET {{price}}/ABCD
 
 
