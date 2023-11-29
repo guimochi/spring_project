@@ -65,7 +65,7 @@ public class GatewayController {
   }
 
   /**
-   * Update an investor in the VSX platform
+   * Update an Investor's data (password excluded) in the VSX platform
    * @param username of the investor
    * @param investorData
    * @return 200 if updated, 400 if invalid data, 404 if investor not found
