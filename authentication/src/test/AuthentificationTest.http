@@ -1,35 +1,35 @@
 ### Create safeCredentials
-POST http://localhost:9002/authentication/Cat4Life
+POST {{authentication}}/Cat4Life
 Content-Type: application/json
 
 {
-  "pseudo": "Cat4Life",
+  "username": "Cat4Life",
   "password": "NotSaying!1234"
 }
 
 ### Update safeCredentials
-PUT http://localhost:9002/authentication/Cat4Life
+PUT {{authentication}}/Cat4Life
 Content-Type: application/json
 
 {
-  "pseudo": "Cat4Life",
-  "password": "password123"
+  "username": "Cat4Life",
+  "password": "pas"
 }
 
 ### Delete safeCredentials
-DELETE http://localhost:9002/authentication/Cat4Life
+DELETE {{authentication}}/Cat4Life
 
 ### Connect user
-POST http://localhost:9002/authentication/connect
+POST {{authentication}}/connect
 Content-Type: application/json
 
 {
-  "pseudo": "Cat4Life",
-  "password": "NotSaying!1234"
+  "username": "Cat4Life",
+  "password": "pas"
 }
 
 ### Verify token
 POST http://localhost:9002/authentication/verify
 Content-Type: application/json
 
-eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJhdXRoMCIsInBzZXVkbyI6IkNhdDRMaWZlIn0._j4-kifaBxGfePfogTxP5TOtB6QYQGUxOl-DOeqtxFzY2wyMGk1AoOIFs2-Rq2mA82C8Bk89fT0LqIuk3-tvZw
+eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJhdXRoMCIsInVzZXJuYW1lIjoiQ2F0NExpZmUifQ.ax8QP10mC2amZQnZXyMPKennC1eVo0J7D-nINN5Dctu7Z1piTxQbRp7ugDA7Q1n5B5-c01KWuPPdQZBe-t_nzA
