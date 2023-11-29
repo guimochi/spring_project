@@ -14,9 +14,9 @@ public class MatchingController {
     this.service = service;
   }
 
-  @PostMapping("/match/{ticker}")
-  public ResponseEntity<Void> match(@PathVariable String ticker) {
-    service.match(ticker);
+  @PostMapping("/trigger/{ticker}")
+  public ResponseEntity<Void> trigger(@PathVariable String ticker) {
+    service.trigger(ticker);
     return ResponseEntity.ok().build();
   }
 }
