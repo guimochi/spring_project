@@ -1,6 +1,8 @@
 package vinci.stock.matching;
 
 import java.util.PriorityQueue;
+import org.apache.log4j.Logger;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import vinci.stock.matching.models.Order;
@@ -17,6 +19,7 @@ public class MatchingService {
   private final OrderProxy orderProxy;
   private final ExecutionProxy executionProxy;
   private final PriceProxy priceProxy;
+  private final Logger logger = Logger.getLogger("matchingLogger");
 
   public MatchingService(OrderProxy orderProxy, ExecutionProxy executionProxy,
       PriceProxy priceProxy) {
@@ -25,7 +28,7 @@ public class MatchingService {
     this.priceProxy = priceProxy;
   }
 
-  public void match(String ticker) {
+  public void trigger(String ticker) {
     Iterable<Order> ordersSideBuy = orderProxy.readAllOpenByTickerAndSide(ticker,
         Side.BUY).getBody();
 //  Create queue sorted by match first, then get the higher price and finally timestamp
@@ -51,6 +54,7 @@ public class MatchingService {
       if (sell == null || buy == null) {
         break;
       }
+//      get owner
       String buyer = buy.getOwner();
       String seller = sell.getOwner();
 
@@ -67,32 +71,35 @@ public class MatchingService {
       transaction.setSell_order_guid(sell.getGuid());
       transaction.setQuantity(quantity);
 
-//      Check both market
-      if (buy.getType() == Type.MARKET && sell.getType() == Type.MARKET) {
-        ResponseEntity<Double> responcePrice = priceProxy.getPrice(ticker);
-        double price = responcePrice.getBody();
-        transaction.setPrice(price);
-        executionProxy.execute(ticker, seller, buyer, transaction);
-      }
-//      Check buy market
-      if (buy.getType() == Type.MARKET) {
-        double price = sell.getLimit();
-        transaction.setPrice(price);
-        executionProxy.execute(ticker, seller, buyer, transaction);
-      }
-//      Check sell market
-      if (sell.getType() == Type.MARKET) {
-        double price = buy.getLimit();
-        transaction.setPrice(price);
-        executionProxy.execute(ticker, seller, buyer, transaction);
-//        both limit
-      } else {
+      double price;
+//      Check both limit
+      if (buy.getType() == Type.LIMIT && sell.getType() == Type.LIMIT) {
         if (sell.getLimit() > buy.getLimit()) {
           break;
         }
-        double price = (sell.getLimit() + buy.getLimit()) / 2;
-        transaction.setPrice(price);
-        executionProxy.execute(ticker, seller, buyer, transaction);
+        price = (sell.getLimit() + buy.getLimit()) / 2;
+//        buy limit and sell market
+      } else if (buy.getType() == Type.LIMIT) {
+        price = buy.getLimit();
+//        sell limit and buy market
+      } else if (sell.getType() == Type.LIMIT) {
+        price = buy.getLimit();
+//        both market
+      } else {
+        ResponseEntity<Double> responsePrice = priceProxy.getPrice(ticker);
+        if (responsePrice.getBody() == null) {
+          logger.error("Error in priceProxy getPrice, body is null");
+          break;
+        }
+        price = responsePrice.getBody();
+      }
+
+      transaction.setPrice(price);
+      ResponseEntity<Void> response = executionProxy.execute(ticker, seller, buyer, transaction);
+      if (response.getStatusCode() != HttpStatus.OK) {
+        Logger errorLogger = Logger.getLogger("errorLogger");
+        errorLogger.error("Error in executionProxy execute");
+        break;
       }
 //      update order
       buy.setFilled(buy.getFilled() + quantity);
