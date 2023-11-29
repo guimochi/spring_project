@@ -3,6 +3,7 @@ package vinci.stock;
 import feign.FeignException;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
+import vinci.stock.dto.Credentials;
 import vinci.stock.dto.InvestorData;
 import vinci.stock.entities.Investor;
 import vinci.stock.repositories.AuthentificationProxy;
@@ -34,7 +35,7 @@ public class InvestorService {
       return false;
     }
     try {
-      //authentificationProxy.createCredentials(investorWithPassword.getUsername(), new Credentials(investorWithPassword.getUsername(), password));
+      authentificationProxy.createCredentials(investorData.getUsername(), new Credentials(investorData.getUsername(), password));
     } catch (FeignException e) {
       return false;
     }
@@ -74,11 +75,12 @@ public class InvestorService {
     if (!investorRepository.existsById(username)) {
       return false;
     }
-      /*if (this.walletProxy.readOne(username).iterator().hasNext()) {
+
+    try {
+       /*if (this.walletProxy.readOne(username).iterator().hasNext()) {
           return false;
       }*/
-    try {
-      //authentificationProxy.deleteCredentials(username);
+      authentificationProxy.deleteCredentials(username);
     } catch (FeignException e) {
       return false;
     }

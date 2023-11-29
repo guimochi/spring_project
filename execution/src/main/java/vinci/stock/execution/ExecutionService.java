@@ -30,13 +30,13 @@ public class ExecutionService {
         transaction.getPrice() * transaction.getQuantity(), 1));
     positionsSeller.add(
         new Position(transaction.getSeller(), transaction.getTicker(), transaction.getQuantity(),
-            transaction.getPrice()));
+            0));
     List<Position> positionsBuyer = new ArrayList<>();
     positionsBuyer.add(new Position(transaction.getBuyer(), "CASH",
         -transaction.getPrice() * transaction.getQuantity(), 1));
     positionsBuyer.add(
         new Position(transaction.getBuyer(), transaction.getTicker(), -transaction.getQuantity(),
-            transaction.getPrice()));
+            0));
 
     try {
       walletProxy.updateOne(transaction.getSeller(), positionsSeller);
