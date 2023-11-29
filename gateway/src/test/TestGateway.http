@@ -30,35 +30,6 @@ Content-Type: application/json
   "password": "password"
 }
 
-### POST /investor/{username} - Create investor with existing username (error 409)
-POST {{gateway}}/investor/pica
-Content-Type: application/json
-
-{
-  "investor_data": {
-    "username": "pica",
-    "email": "abc@gmail.com",
-    "firstname": "test",
-    "lastname":"test",
-    "birthdate": "20/01/2020"
-  },
-    "password": "password"
-}
-
-### POST /investor/{username} - Create investor with invalid data (error 400)
-POST {{gateway}}/investor/pica
-Content-Type: application/json
-
-{
-  "investor_data": {
-    "username": "picsouNonValide",
-    "firstname": "test",
-    "lastname":"",
-    "birthdate": "20/01/2020"
-  },
-  "password": "password"
-}
-
 ### GET /investor/{username} - Get investor by username
 GET {{gateway}}/investor/pica
 
@@ -89,6 +60,8 @@ Content-Type: application/json
   "password": "get_rich_fast"
 }
 
+> {% client.global.set("token", response.body) %}
+
 ### PUT /authentication/{username} - Update investor credentials (success)
 PUT {{gateway}}/authentication/pica
 Content-Type: application/json
@@ -113,17 +86,50 @@ Content-Type: application/json
   "filled": 0
 }
 
-### POST /investor/{username} - Create investor with existing username (error 409)
-POST {{gateway}}/investor/pica
+### POST /order - Create another order (success)
+POST {{gateway}}/order
 Content-Type: application/json
 
 {
-  "investor_data": {
-    "username": "investor2",
-    "email": "investor2@gmail.com",
-    "firstname": "test",
-    "lastname":"test",
-    "birthdate": "20/01/2020"
-  },
-  "password": "password"
+  "owner": "test3",
+  "timestamp": 457696995,
+  "ticker": "AMDT",
+  "quantity": 50,
+  "side": "SELL",
+  "type": "MARKET",
+  "limit": 100,
+  "filled": 0
 }
+
+### POST /order - Create orders for pica
+POST {{gateway}}/order
+Content-Type: application/json
+
+{
+  "owner": "pica",
+  "timestamp": 457696995,
+  "ticker": "AMDT",
+  "quantity": 50,
+  "side": "SELL",
+  "type": "MARKET",
+  "limit": 100,
+  "filled": 0
+}
+
+### POST /order - Create orders for pica
+POST {{gateway}}/order
+Content-Type: application/json
+
+{
+  "owner": "pica",
+  "timestamp": 457696995,
+  "ticker": "MORT",
+  "quantity": 50,
+  "side": "SELL",
+  "type": "MARKET",
+  "limit": 100,
+  "filled": 0
+}
+
+### GET /order/by-user/{username} - Get orders by username
+GET {{gateway}}/order/by-user/pica
