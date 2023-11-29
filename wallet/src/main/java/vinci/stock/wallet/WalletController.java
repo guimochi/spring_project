@@ -24,7 +24,11 @@ public class WalletController {
     @GetMapping("/wallet/{username}")
     public ResponseEntity<Iterable<Position>> openWalletByUser(@PathVariable String username) {
         Iterable<Position> positions = service.openWalletByUser(username);
-        return ResponseEntity.ok(positions);
+        if (positions == null) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok(positions);
+        }
     }
 
     @PostMapping("/wallet/{username}")

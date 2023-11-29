@@ -3,6 +3,7 @@ package vinci.stock.wallet;
 import org.springframework.stereotype.Service;
 import vinci.stock.wallet.dto.Position;
 import vinci.stock.wallet.entities.Wallet;
+import vinci.stock.wallet.repository.PriceProxy;
 import vinci.stock.wallet.repository.WalletRepository;
 
 import java.util.List;
@@ -10,9 +11,11 @@ import java.util.List;
 @Service
 public class WalletService {
     private final WalletRepository repository;
+    private final PriceProxy priceProxy;
 
-    public WalletService(WalletRepository repository) {
+    public WalletService(WalletRepository repository, PriceProxy priceProxy) {
         this.repository = repository;
+        this.priceProxy = priceProxy;
     }
 
     public double getNetWorth(String username) {
@@ -22,7 +25,7 @@ public class WalletService {
         }
         double netWorth = 0;
         for (Wallet w : wallet) {
-            netWorth += w.getQuantity(); // * w.getUnitValue();
+            netWorth += w.getQuantity() * priceProxy.getPriceFromStock(w.getTicker()) ;
         }
         return netWorth;
     }
@@ -32,12 +35,12 @@ public class WalletService {
         if (wallet == null) {
             return null;
         }
-        List<Position> positions = null;
+        List<Position> positions = new java.util.ArrayList<>();
         for (Wallet w : wallet) {
             Position p = new Position();
             p.setTicker(w.getTicker());
             p.setQuantity(w.getQuantity());
-            //p.setUnitValue(w.getUnitValue());
+            p.setUnitValue(priceProxy.getPriceFromStock(w.getTicker()));
             positions.add(p);
         }
         return positions;

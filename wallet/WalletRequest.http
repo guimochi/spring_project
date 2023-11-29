@@ -16,7 +16,7 @@ Content-Type: application/json
   },
   {
     "ticker": "RAF",
-    "quantity": 4,
+    "quantity": -4,
     "unitValue": 20
   },
   {
