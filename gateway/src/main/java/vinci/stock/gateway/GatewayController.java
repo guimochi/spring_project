@@ -231,11 +231,11 @@ public class GatewayController {
 
   /**
    *
-   * @param username
-   * @param ticker
-   * @param quantity
-   * @param token
-   * @return
+   * @param username of the investor
+   * @param ticker of the position
+   * @param quantity of the position
+   * @param token of the investor connected
+   * @return 200 if position added or removed with new positions of investor, 401 if token invalid, 404 if investor not found
    */
   @PostMapping("/wallet/{username}/position/{ticker}")
   public ResponseEntity<Iterable<Position>> depositOrWithdrawPosition(@PathVariable String username, @PathVariable String ticker, @RequestBody int quantity, @RequestHeader String token) {

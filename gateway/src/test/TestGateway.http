@@ -81,14 +81,33 @@ Content-Type: application/json
 ### DELETE /investor/{username} - Delete investor (success)
 DELETE {{gateway}}/investor/investor2
 
-### DELETE /investor/{username} - Delete investor who does not exist (error 404)
-DELETE {{gateway}}/investor/investor3
-
 ///////////////////////////////////// AUTH /////////////////////////////////////////
+### POST /authentication/connect - Connect investor (success)
+POST {{gateway}}/authentication/connect
+Content-Type: application/json
 
+{
+  "username": "pica",
+  "password": "get_rich_fast"
+}
+
+### PUT /authentication/{username} - Update investor credentials (success)
+PUT {{gateway}}/authentication/pica
+Content-Type: application/json
+
+{
+  "username": "pica",
+  "password": "get_rich_faster"
+}
 
 //////////////////////////////////// ORDER /////////////////////////////////////////
+### POST /order - Create order (success)
+POST {{gateway}}/order
+Content-Type: application/json
 
+{
+  //TODO
+}
 
 //////////////////////////////////// WALLET ////////////////////////////////////////
 
