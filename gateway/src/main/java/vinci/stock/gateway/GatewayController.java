@@ -229,5 +229,25 @@ public class GatewayController {
     }
   }
 
+  /**
+   *
+   * @param username
+   * @param ticker
+   * @param quantity
+   * @param token
+   * @return
+   */
+  @PostMapping("/wallet/{username}/position/{ticker}")
+  public ResponseEntity<Iterable<Position>> depositOrWithdrawPosition(@PathVariable String username, @PathVariable String ticker, @RequestBody int quantity, @RequestHeader String token) {
+    String user = service.verify(token);
+    if (user == null) return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+
+    try {
+      Iterable<Position> position = service.depositOrWithdrawPositionFromWallet(username, ticker, quantity);
+      return new ResponseEntity<>(position, HttpStatus.OK);
+    } catch (NotFoundException e) {
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+  }
 }
 
