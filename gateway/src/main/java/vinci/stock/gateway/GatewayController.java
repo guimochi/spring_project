@@ -53,7 +53,7 @@ public class GatewayController {
    */
   @PostMapping("/investor/{username}")
   public ResponseEntity<Void> createInvestor(@PathVariable String username, @RequestBody InvestorWithPassword investorWithPassword){
-    if (!Objects.equals(investorWithPassword.getUsername(), username)) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    if (!Objects.equals(investorWithPassword.getInvestorData().getUsername(), username)) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     try {
       service.createInvestor(username, investorWithPassword);
       return new ResponseEntity<>(HttpStatus.CREATED);

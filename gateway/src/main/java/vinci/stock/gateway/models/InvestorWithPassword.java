@@ -1,5 +1,6 @@
 package vinci.stock.gateway.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,20 +10,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class InvestorWithPassword extends InvestorData {
+public class InvestorWithPassword {
+  @JsonProperty("investor_data")
+  private InvestorData investorData;
   private String password;
-
-  /**
-   * Convert this object to an InvestorData object.
-   * @return InvestorData
-   */
-  public InvestorData toInvestor() {
-    return new InvestorData(
-      this.getUsername(),
-      this.getEmail(),
-      this.getFirstName(),
-      this.getLastName(),
-      this.getBirthDate()
-    );
-  }
 }

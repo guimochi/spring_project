@@ -13,7 +13,7 @@ import lombok.Setter;
 public class InvestorData {
   private String username;
   private String email;
-  private String firstName;
-  private String lastName;
-  private Date birthDate;
+  private String firstname;
+  private String lastname;
+  private String birthdate;
 }

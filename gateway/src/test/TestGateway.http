@@ -1,2 +1,17 @@
-### GET /investor/{username} - Get investor by username (success)
-{{gateway}}/investor/picsou
+### GET /investor/{username} - Get investor by username (fix !)
+GET {{gateway}}/investor/pica
+
+### POST /investor/{username} - Create investor
+POST {{gateway}}/investor/pica
+Content-Type: application/json
+
+{
+  "investor_data": {
+    "username": "pica",
+    "email": "piceou@canardville.com",
+    "firstname": "Scerooge",
+    "lastname": "MzcDuck",
+    "birthdate": "15/12/1947"
+  },
+  "password": "get_rich_fast"
+}
