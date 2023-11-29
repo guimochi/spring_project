@@ -11,7 +11,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class Position {
 
-  private String ticket;
-  private int quantity;
-  private double unitValue;
+    private String ticket;
+    private int quantity;
+    private double unitValue;
 }
