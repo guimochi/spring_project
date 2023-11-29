@@ -1,7 +1,7 @@
-###
+### Get user named Pica
 GET {{investor}}/pica
 
-###
+### Create user named Pica and its credentials
 POST {{investor}}/pica
 Content-Type: application/json
 
@@ -16,7 +16,16 @@ Content-Type: application/json
   "password": "get_rich_fast"
 }
 
-###
+### Connect user named Pica
+POST {{authentication}}/connect
+Content-Type: application/json
+
+{
+  "username": "pica",
+  "password": "get_rich_fast"
+}
+
+### Update user named Pica
 PUT {{investor}}/pica
 Content-Type: application/json
 
@@ -28,5 +37,15 @@ Content-Type: application/json
   "birthdate": "30/12/2022"
 }
 
-###
+### Delete user named Pica and its credentials
 DELETE {{investor}}/pica
+
+
+### Connect user named Pica
+POST {{authentication}}/connect
+Content-Type: application/json
+
+{
+  "username": "pica",
+  "password": "get_rich_fast"
+}

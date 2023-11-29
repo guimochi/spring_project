@@ -48,7 +48,7 @@ public class Order {
   @Column(name = "_limit")
   private double limit;
 
-  @Column()
+  @Column
   private int filled;
 
   public boolean checkValid() {

@@ -12,7 +12,7 @@ import lombok.ToString;
 @NoArgsConstructor
 public class InvestorWithPassword {
 
-  @JsonProperty("investor_data")
-  private InvestorData investorData;
-  private String password;
+    @JsonProperty("investor_data")
+    private InvestorData investorData;
+    private String password;
 }
