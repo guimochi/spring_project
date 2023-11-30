@@ -16,8 +16,8 @@ ensembles.
 
 - Wallet --> Sasha port:9005
 - Matching --> Gui port:9006
-- Execution -->  Alicia port:9007
-- Gateway -->  Antoine port:9008
+- Execution --> Antoine port:9007
+- Gateway -->  Alicia port:8080
 
 --- La découpe en services commence ici ---------------------------------------------------------------
 
