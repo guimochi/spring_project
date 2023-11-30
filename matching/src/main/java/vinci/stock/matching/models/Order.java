@@ -1,6 +1,5 @@
 package vinci.stock.matching.models;
 
-import java.sql.Timestamp;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,7 +15,7 @@ public class Order implements Comparable<Order> {
 
   private String owner;
 
-  private Timestamp timestamp;
+  private int timestamp;
 
   private String ticker;
 
@@ -40,7 +39,7 @@ public class Order implements Comparable<Order> {
   @Override
   public int compareTo(Order o) {
     if (this.getType() == Type.MARKET && o.getType() == Type.MARKET) {
-      return this.getTimestamp().compareTo(o.getTimestamp());
+      return Integer.compare(this.getTimestamp(), (o.getTimestamp()));
     }
     if (o.getType() == Type.MARKET) {
       return 1;
@@ -53,13 +52,13 @@ public class Order implements Comparable<Order> {
       if (compare != 0) {
         return compare;
       }
-      return this.getTimestamp().compareTo(o.getTimestamp());
+      return Integer.compare(this.getTimestamp(), (o.getTimestamp()));
     }
     int compare = Double.compare(this.getLimit(), o.getLimit());
     if (compare != 0) {
       return compare;
     }
-    return this.getTimestamp().compareTo(o.getTimestamp());
+    return Integer.compare(this.getTimestamp(), (o.getTimestamp()));
   }
 
   public boolean checkOpen() {
