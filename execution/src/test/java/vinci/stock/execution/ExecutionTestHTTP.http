@@ -1,4 +1,4 @@
-### CREATE a new order for user test SELL
+### CREATE a new order for user test side SELL
 POST {{order}}
 Content-Type: application/json
 
@@ -13,7 +13,7 @@ Content-Type: application/json
   "filled": 0
 }
 
-### CREATE a new order for user test2 BUY
+### CREATE a new order for user test2 side BUY
 POST {{order}}
 Content-Type: application/json
 
@@ -37,7 +37,7 @@ Content-Type: application/json
   "ticker": "LNRD",
   "seller": "test",
   "buyer": "test2",
-  "sell_order_guid": "b35588cc-2084-4ef5-b3a4-e3d593841f34",
+  "sell_order_guid": "7ec43267-dccb-4f18-ba67-600edeeab7f0",
   "buy_order_guid": "eb111b7c-4578-4163-93bd-b5939c8dc927",
   "quantity": -1,
   "price": 1
