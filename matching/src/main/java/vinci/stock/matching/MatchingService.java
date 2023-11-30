@@ -83,7 +83,7 @@ public class MatchingService {
         price = buy.getLimit();
 //        sell limit and buy market
       } else if (sell.getType() == Type.LIMIT) {
-        price = buy.getLimit();
+        price = sell.getLimit();
 //        both market
       } else {
         ResponseEntity<Double> responsePrice = priceProxy.getPrice(ticker);
