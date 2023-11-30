@@ -25,18 +25,22 @@ public class ExecutionService {
         this.walletProxy = walletProxy;
     }
 
+    /**
+     * @param transaction transaction to be executed
+     * @return true if the transaction is executed successfully, false otherwise
+     */
     public boolean executeOrder(Transaction transaction) {
         List<Position> positionsSeller = new ArrayList<>();
         positionsSeller.add(new Position(transaction.getSeller(), "CASH",
                 transaction.getPrice() * transaction.getQuantity(), 1));
         positionsSeller.add(
-                new Position(transaction.getSeller(), transaction.getTicker(), transaction.getQuantity(),
+                new Position(transaction.getSeller(), transaction.getTicker(), -transaction.getQuantity(),
                         0));
         List<Position> positionsBuyer = new ArrayList<>();
         positionsBuyer.add(new Position(transaction.getBuyer(), "CASH",
                 -transaction.getPrice() * transaction.getQuantity(), 1));
         positionsBuyer.add(
-                new Position(transaction.getBuyer(), transaction.getTicker(), -transaction.getQuantity(),
+                new Position(transaction.getBuyer(), transaction.getTicker(), transaction.getQuantity(),
                         0));
 
         try {

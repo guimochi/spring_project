@@ -1,3 +1,13 @@
+### Get open wallet of test -> should have an empty array
+GET {{wallet}}/test
+
+### Get open wallet of test2 -> should have an empty array
+GET {{wallet}}/test2
+
+### Get price of TEST -> should be 1
+GET {{price}}/TEST
+
+
 ### CREATE a new order for user test side SELL
 POST {{order}}
 Content-Type: application/json
@@ -5,30 +15,33 @@ Content-Type: application/json
 {
   "owner": "test",
   "timestamp": 457696995,
-  "ticker": "LNRD",
+  "ticker": "TEST",
   "quantity": 10,
   "side": "SELL",
   "type": "LIMIT",
-  "limit": 100,
+  "limit": 10,
   "filled": 0
 }
 
-### CREATE a new order for user test2 side BUY
+
+### CREATE a new order for user test2 side BUY which be executed
 POST {{order}}
 Content-Type: application/json
 
 {
   "owner": "test2",
   "timestamp": 457696995,
-  "ticker": "LNRD",
+  "ticker": "TEST",
   "quantity": 10,
   "side": "BUY",
   "type": "LIMIT",
-  "limit": 100,
+  "limit": 10,
   "filled": 0
 }
 
 
+### EXECUTE RESULTS -> if matching algo didnt worked, use the following commands to execute the orders manually
+### Make sure to change the order guid's to the one created previously
 ###
 POST {{execution}}/LNRD/test/test2
 Content-Type: application/json
@@ -37,17 +50,30 @@ Content-Type: application/json
   "ticker": "LNRD",
   "seller": "test",
   "buyer": "test2",
-  "sell_order_guid": "7ec43267-dccb-4f18-ba67-600edeeab7f0",
-  "buy_order_guid": "eb111b7c-4578-4163-93bd-b5939c8dc927",
-  "quantity": -1,
-  "price": 1
+  "sell_order_guid": "(test_order_guid)",
+  "buy_order_guid": "(test2_order_guid)",
+  "quantity": 10,
+  "price": 10
 }
 
-### GET by username test
+### Get open wallet of test -> should have only 100 CASH (10 quantity * 10 limit)
+GET {{wallet}}/test
+
+### Get open wallet of test2 -> should have only 10 TEST
+GET {{wallet}}/test2
+
+### Get price of TEST -> should be 10
+GET {{price}}/TEST
+
+### Get net-worth of test -> should be 0 ((100*1) CASH - (10*10) TEST)
+GET {{wallet}}/test/net-worth
+
+### Get net-worth of test2 -> should be 0 ((10*10) TEST - (100*1) CASH
+GET {{wallet}}/test2/net-worth
+
+
+### GET by username test -> filled should be 10 for the order created previously
 GET {{order}}/by-user/test
 
-### GET by username test2
+### GET by username test2 -> filled should be 10 for the order created previously
 GET {{order}}/by-user/test2
-
-### GET price by ticker LNRD
-GET {{price}}/LNRD
