@@ -1,7 +1,7 @@
 package vinci.stock.gateway;
 
 import feign.FeignException;
-import feign.FeignException.NotFound;
+import java.util.ArrayList;
 import vinci.stock.gateway.data.AuthenticationProxy;
 import vinci.stock.gateway.data.InvestorProxy;
 import vinci.stock.gateway.data.OrderProxy;
@@ -56,16 +56,18 @@ public class GatewayService {
   }
 
   /**
-   * Verifies a connection token
+   * Verifies a connection token. If the token is invalid, an exception is thrown.
+   *
    * @param token Connection token
-   * @return true if the token is valid, false otherwise
+   * @return true if the token is valid and the token is for the given username, false otherwise
    */
-  public String verify(String token) {
+  public boolean isAuthorized(String token, String username) {
     try {
-      return authenticationProxy.verify(token);
+      String usernameReceived = authenticationProxy.verify(token);
+      return usernameReceived != null && usernameReceived.equals(username);
     } catch (FeignException e) {
       if (e.status() == 401) {
-        return null;
+        return false;
       } else {
         throw e;
       }
@@ -139,7 +141,13 @@ public class GatewayService {
     }
   }
 
-
+  /**
+   * Update credentials of an investor
+   * @param username of the investor
+   * @param credentials of the investor
+   * @throws BadRequestException if invalid data
+   * @throws NotFoundException if investor not found
+   */
   public void updateCredentials(String username, Credentials credentials) throws BadRequestException, NotFoundException {
     try {
       authenticationProxy.updateCredentials(username, credentials);
@@ -150,6 +158,12 @@ public class GatewayService {
     }
   }
 
+  /**
+   * Create an order in the VSX platform
+   * @param order to create
+   * @return the created order
+   * @throws BadRequestException if invalid data
+   */
   public Order createOrder(Order order) throws BadRequestException {
     try {
       return orderProxy.createOne(order);
@@ -159,6 +173,12 @@ public class GatewayService {
     }
   }
 
+  /**
+   * Read all orders of an investor
+   * @param username of the investor
+   * @return array of orders
+   * @throws NotFoundException if order not found
+   */
   public Iterable<Order> readOrdersByUser(String username) throws NotFoundException {
 
     try {
@@ -170,6 +190,12 @@ public class GatewayService {
 
   }
 
+  /**
+   * Read all positions of an investor
+   * @param username of the investor
+   * @return array of positions
+   * @throws NotFoundException if position not found
+   */
   public Iterable<Position> readWallet(String username) throws NotFoundException {
     try {
       return walletProxy.readWallet(username);
@@ -179,22 +205,22 @@ public class GatewayService {
     }
   }
 
+  /**
+   * Add or remove cash from an investor's wallet
+   * @param username of the investor
+   * @param cash to add or remove
+   * @return updated array of positions
+   * @throws NotFoundException if position not found
+   */
   public Iterable<Position> addOrRemoveCash(String username, int cash) throws NotFoundException {
-    Iterable<Position> positions;
     try {
-      positions = walletProxy.readWallet(username);
-    } catch (FeignException e) {
-      if (e.status() == 404) throw new NotFoundException();
-      else throw e;
-    }
-    try {
-      for (Position position : positions) {
-        if (position.getTicker().equals("CASH")) {
-          position.setQuantity(position.getQuantity() + cash);
-          break;
-        }
-      }
-      return walletProxy.addPositions(username, positions);
+      Position cashPosition = new Position();
+      cashPosition.setTicker("CASH");
+      cashPosition.setQuantity(cash);
+      cashPosition.setUnitValue(1);
+      return walletProxy.addPositions(username, new ArrayList<>() {{
+        add(cashPosition);
+      }});
     } catch (FeignException e) {
       if (e.status() == 404) throw new NotFoundException();
       else throw e;
@@ -203,9 +229,35 @@ public class GatewayService {
 
   }
 
+  /**
+   * Read net worth of an investor
+   * @param username of the investor
+   * @return net worth (int)
+   * @throws NotFoundException if position not found
+   */
   public int readNetWorth(String username) throws NotFoundException {
     try {
       return walletProxy.readNetWorth(username);
+    } catch (FeignException e) {
+      if (e.status() == 404) throw new NotFoundException();
+      else throw e;
+    }
+  }
+
+  /**
+   * Deposit or withdraw a position from an investor's wallet
+   * @param username of the investor
+   * @param ticker of the position
+   * @param quantity of the position
+   * @return the position
+   * @throws NotFoundException if position not found
+   */
+  public Iterable<Position> depositOrWithdrawPositionFromWallet(String username, String ticker, int quantity) throws NotFoundException {
+    try {
+      Iterable<Position> positionToAdd = new ArrayList<>() {{
+        add(new Position(ticker, quantity, 0));
+      }};
+      return walletProxy.addPositions(username, positionToAdd);
     } catch (FeignException e) {
       if (e.status() == 404) throw new NotFoundException();
       else throw e;

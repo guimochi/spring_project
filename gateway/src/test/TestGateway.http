@@ -1,4 +1,3 @@
-///////////////////////////////////// INVESTOR //////////////////////////////////////
 
 ### POST /investor/{username} - Create investor 1 (success)
 POST {{gateway}}/investor/pica
@@ -31,35 +30,6 @@ Content-Type: application/json
   "password": "password"
 }
 
-### POST /investor/{username} - Create investor with existing username (error 409)
-POST {{gateway}}/investor/pica
-Content-Type: application/json
-
-{
-  "investor_data": {
-    "username": "pica",
-    "email": "abc@gmail.com",
-    "firstname": "test",
-    "lastname":"test",
-    "birthdate": "20/01/2020"
-  },
-    "password": "password"
-}
-
-### POST /investor/{username} - Create investor with invalid data (error 400)
-POST {{gateway}}/investor/pica
-Content-Type: application/json
-
-{
-  "investor_data": {
-    "username": "picsouNonValide",
-    "firstname": "test",
-    "lastname":"",
-    "birthdate": "20/01/2020"
-  },
-  "password": "password"
-}
-
 ### GET /investor/{username} - Get investor by username
 GET {{gateway}}/investor/pica
 
@@ -81,8 +51,106 @@ Content-Type: application/json
 ### DELETE /investor/{username} - Delete investor (success)
 DELETE {{gateway}}/investor/investor2
 
-### DELETE /investor/{username} - Delete investor who does not exist (error 404)
-DELETE {{gateway}}/investor/investor3
+### POST /authentication/connect - Connect investor (success)
+POST {{gateway}}/authentication/connect
+Content-Type: application/json
 
-///////////////////////////////////// AUTH /////////////////////////////////////////
+{
+  "username": "pica",
+  "password": "get_rich_fast"
+}
+
+> {% client.global.set("token", response.body) %}
+
+### PUT /authentication/{username} - Update investor credentials (success)
+PUT {{gateway}}/authentication/pica
+Content-Type: application/json
+
+{
+  "username": "pica",
+  "password": "get_rich_faster"
+}
+
+### POST /order - Create order (success)
+POST {{gateway}}/order
+Content-Type: application/json
+
+{
+  "owner": "test2",
+  "timestamp": 457696995,
+  "ticker": "NVDA",
+  "quantity": 10,
+  "side": "BUY",
+  "type": "LIMIT",
+  "limit": 100,
+  "filled": 0
+}
+
+### POST /order - Create orders for pica
+POST {{gateway}}/order
+Content-Type: application/json
+
+{
+  "owner": "pica",
+  "timestamp": 457696995,
+  "ticker": "NVDA",
+  "quantity": 50,
+  "side": "SELL",
+  "type": "LIMIT",
+  "limit": 100,
+  "filled": 0
+}
+
+### POST /order - Create orders for pica
+POST {{gateway}}/order
+Content-Type: application/json
+
+{
+  "owner": "pica",
+  "timestamp": 457696995,
+  "ticker": "MORT",
+  "quantity": 50,
+  "side": "BUY",
+  "type": "MARKET",
+  "limit": 100,
+  "filled": 0
+}
+
+### GET /order/by-user/{username} - Get orders by username
+GET {{gateway}}/order/by-user/pica
+Authorization: {{token}}
+
+### GET /order/by-user/{username} - Get orders for an other user (Unauthorized)
+GET {{gateway}}/order/by-user/test2
+Authorization: {{token}}
+
+### GET /wallet/{username} - Get wallet of an investor
+GET {{gateway}}/wallet/pica
+Authorization: {{token}}
+
+### POST /wallet/{username}/cash - Add cash to wallet
+POST {{gateway}}/wallet/pica/cash
+Content-Type: application/json
+Authorization: {{token}}
+
+1000000
+
+### POST /wallet/{username}/cash - Remove cash from wallet (just 1 because pica is cheap and does not want to pay for the test)
+POST {{gateway}}/wallet/pica/cash
+Content-Type: application/json
+Authorization: {{token}}
+
+-1
+
+### GET /wallet/{username}/net-worth - Get net worth of an investor
+GET {{gateway}}/wallet/pica/net-worth
+Authorization: {{token}}
+
+### POST /wallet/{username}/position/{ticker} - Add position to wallet
+POST {{gateway}}/wallet/pica/position/LNRD
+Content-Type: application/json
+Authorization: {{token}}
+
+100
+
 

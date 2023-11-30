@@ -17,12 +17,23 @@ public class PriceController {
     this.priceService = priceService;
   }
 
+  /**
+   * Get price of a position identified by its ticker
+   * @param ticker Ticker of the position
+   * @return Price of position
+   */
   @GetMapping("/price/{ticker}")
-  public ResponseEntity<Integer> getPriceFromStock(@PathVariable String ticker) {
+  public ResponseEntity<Integer> getPriceFromPosition(@PathVariable String ticker) {
     int price = priceService.getOne(ticker);
     return new ResponseEntity<>(price, HttpStatus.OK);
   }
 
+  /**
+   * Update the current price of position
+   * @param ticker Ticker of the position
+   * @param price New price of the position
+   * @return HTTP status code
+   */
   @PatchMapping("/price/{ticker}")
   public ResponseEntity<Void> updatePrice(@PathVariable String ticker, @RequestBody int price) {
     if (price <= 0) {

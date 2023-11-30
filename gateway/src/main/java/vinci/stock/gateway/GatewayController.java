@@ -161,8 +161,7 @@ public class GatewayController {
    */
   @GetMapping("/order/by-user/{username}")
   public ResponseEntity<Iterable<Order>> readOrdersByInvestor(@PathVariable String username, @RequestHeader("Authorization") String token) {
-    String user = service.verify(token);
-    if (user == null) return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+    if (!service.isAuthorized(token, username)) return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 
     try {
       Iterable<Order> orders = service.readOrdersByUser(username);
@@ -180,8 +179,7 @@ public class GatewayController {
    */
   @GetMapping("/wallet/{username}")
   public ResponseEntity<Iterable<Position>> readWallet(@PathVariable String username, @RequestHeader("Authorization") String token) {
-    String user = service.verify(token);
-    if (user == null) return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+    if (!service.isAuthorized(token, username)) return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 
     try {
       Iterable<Position> wallet = service.readWallet(username);
@@ -198,9 +196,8 @@ public class GatewayController {
     * @return 200 if cash added or removed with new positions of investor, 401 if token invalid, 404 if investor not found
     */
   @PostMapping("/wallet/{username}/cash")
-  public ResponseEntity<Iterable<Position>> addOrRemoveCash(@PathVariable String username, @RequestHeader String token, @RequestBody int cash){
-    String user = service.verify(token);
-    if (user == null) return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+  public ResponseEntity<Iterable<Position>> addOrRemoveCash(@PathVariable String username, @RequestHeader("Authorization") String token, @RequestBody int cash){
+    if (!service.isAuthorized(token, username)) return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 
     try {
       Iterable<Position> wallet = service.addOrRemoveCash(username, cash);
@@ -217,9 +214,8 @@ public class GatewayController {
    * @return 200 if net worth found, 401 if token invalid, 404 if investor not found
    */
   @GetMapping("/wallet/{username}/net-worth")
-  public ResponseEntity<Integer> readNetWorth(@PathVariable String username, @RequestHeader String token) {
-    String user = service.verify(token);
-    if (user == null) return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+  public ResponseEntity<Integer> readNetWorth(@PathVariable String username, @RequestHeader("Authorization") String token) {
+    if (!service.isAuthorized(token, username)) return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 
     try {
       int netWorth = service.readNetWorth(username);
@@ -229,5 +225,24 @@ public class GatewayController {
     }
   }
 
+  /**
+   *
+   * @param username of the investor
+   * @param ticker of the position
+   * @param quantity of the position
+   * @param token of the investor connected
+   * @return 200 if position added or removed with new positions of investor, 401 if token invalid, 404 if investor not found
+   */
+  @PostMapping("/wallet/{username}/position/{ticker}")
+  public ResponseEntity<Iterable<Position>> depositOrWithdrawPosition(@PathVariable String username, @PathVariable String ticker, @RequestBody int quantity, @RequestHeader("Authorization") String token) {
+    if (!service.isAuthorized(token, username)) return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+
+    try {
+      Iterable<Position> position = service.depositOrWithdrawPositionFromWallet(username, ticker, quantity);
+      return new ResponseEntity<>(position, HttpStatus.OK);
+    } catch (NotFoundException e) {
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+  }
 }
 
