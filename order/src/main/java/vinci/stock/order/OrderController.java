@@ -84,6 +84,10 @@ public class OrderController {
 
   /**
    * Read all orders by a user.
+   *
+   * <p>Note: if the user does not exist, an empty list is returned. This is different from the
+   * yaml but it is a deliberate choice after talking about it with the professor as to not call
+   * UserProxy </p>
    * @param username the username of the user
    * @return response entity with the list of orders if found, empty list if not
    */
