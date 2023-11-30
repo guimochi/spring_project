@@ -1,7 +1,6 @@
 package vinci.stock.gateway;
 
 import feign.FeignException;
-import feign.FeignException.NotFound;
 import java.util.ArrayList;
 import vinci.stock.gateway.data.AuthenticationProxy;
 import vinci.stock.gateway.data.InvestorProxy;
@@ -57,16 +56,18 @@ public class GatewayService {
   }
 
   /**
-   * Verifies a connection token
+   * Verifies a connection token. If the token is invalid, an exception is thrown.
+   *
    * @param token Connection token
-   * @return true if the token is valid, false otherwise
+   * @return true if the token is valid and the token is for the given username, false otherwise
    */
-  public String verify(String token) {
+  public boolean isAuthorized(String token, String username) {
     try {
-      return authenticationProxy.verify(token);
+      String usernameReceived = authenticationProxy.verify(token);
+      return usernameReceived != null && usernameReceived.equals(username);
     } catch (FeignException e) {
       if (e.status() == 401) {
-        return null;
+        return false;
       } else {
         throw e;
       }

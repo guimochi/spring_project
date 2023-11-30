@@ -86,21 +86,6 @@ Content-Type: application/json
   "filled": 0
 }
 
-### POST /order - Create another order (success)
-POST {{gateway}}/order
-Content-Type: application/json
-
-{
-  "owner": "test3",
-  "timestamp": 457696995,
-  "ticker": "AMDT",
-  "quantity": 50,
-  "side": "SELL",
-  "type": "MARKET",
-  "limit": 100,
-  "filled": 0
-}
-
 ### POST /order - Create orders for pica
 POST {{gateway}}/order
 Content-Type: application/json
@@ -133,3 +118,11 @@ Content-Type: application/json
 
 ### GET /order/by-user/{username} - Get orders by username
 GET {{gateway}}/order/by-user/pica
+Authorization: {{token}}
+
+### GET /order/by-user/{username} - Get orders for an other user (Unauthorized)
+GET {{gateway}}/order/by-user/test2
+Authorization: {{token}}
+
+
+

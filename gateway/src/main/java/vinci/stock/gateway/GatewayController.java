@@ -161,8 +161,7 @@ public class GatewayController {
    */
   @GetMapping("/order/by-user/{username}")
   public ResponseEntity<Iterable<Order>> readOrdersByInvestor(@PathVariable String username, @RequestHeader("Authorization") String token) {
-    String user = service.verify(token);
-    if (user == null) return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+    if (!service.isAuthorized(token, username)) return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 
     try {
       Iterable<Order> orders = service.readOrdersByUser(username);
@@ -180,8 +179,7 @@ public class GatewayController {
    */
   @GetMapping("/wallet/{username}")
   public ResponseEntity<Iterable<Position>> readWallet(@PathVariable String username, @RequestHeader("Authorization") String token) {
-    String user = service.verify(token);
-    if (user == null) return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+    if (!service.isAuthorized(token, username)) return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 
     try {
       Iterable<Position> wallet = service.readWallet(username);
@@ -199,8 +197,7 @@ public class GatewayController {
     */
   @PostMapping("/wallet/{username}/cash")
   public ResponseEntity<Iterable<Position>> addOrRemoveCash(@PathVariable String username, @RequestHeader String token, @RequestBody int cash){
-    String user = service.verify(token);
-    if (user == null) return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+    if (!service.isAuthorized(token, username)) return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 
     try {
       Iterable<Position> wallet = service.addOrRemoveCash(username, cash);
@@ -218,8 +215,7 @@ public class GatewayController {
    */
   @GetMapping("/wallet/{username}/net-worth")
   public ResponseEntity<Integer> readNetWorth(@PathVariable String username, @RequestHeader String token) {
-    String user = service.verify(token);
-    if (user == null) return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+    if (!service.isAuthorized(token, username)) return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 
     try {
       int netWorth = service.readNetWorth(username);
@@ -239,8 +235,7 @@ public class GatewayController {
    */
   @PostMapping("/wallet/{username}/position/{ticker}")
   public ResponseEntity<Iterable<Position>> depositOrWithdrawPosition(@PathVariable String username, @PathVariable String ticker, @RequestBody int quantity, @RequestHeader String token) {
-    String user = service.verify(token);
-    if (user == null) return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+    if (!service.isAuthorized(token, username)) return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 
     try {
       Iterable<Position> position = service.depositOrWithdrawPositionFromWallet(username, ticker, quantity);
