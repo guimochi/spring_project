@@ -1,13 +1,13 @@
 ### Get user named Pica
-GET {{investor}}/pica
+GET {{investor}}/pic
 
 ### Create user named Pica and its credentials
-POST {{investor}}/pica
+POST {{investor}}/pic
 Content-Type: application/json
 
 {
   "investor_data": {
-    "username": "pica",
+    "username": "pic",
     "email": "piceou@canardville.com",
     "firstname": "Scerooge",
     "lastname": "MzcDuck",

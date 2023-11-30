@@ -78,9 +78,9 @@ public class InvestorService {
         }
 
         try {
-       /*if (this.walletProxy.readOne(username).iterator().hasNext()) {
-          return false;
-      }*/
+            if (this.walletProxy.readOne(username).iterator().hasNext()) {
+                return false;
+            }
             authentificationProxy.deleteCredentials(username);
         } catch (FeignException e) {
             return false;
