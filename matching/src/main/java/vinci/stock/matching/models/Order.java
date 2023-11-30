@@ -49,13 +49,13 @@ public class Order implements Comparable<Order> {
       return -1;
     }
     if (this.getSide() == Side.BUY) {
-      int compare = Double.compare(this.getLimit(), o.getLimit());
+      int compare = Double.compare(o.getLimit(), this.getLimit());
       if (compare != 0) {
         return compare;
       }
       return this.getTimestamp().compareTo(o.getTimestamp());
     }
-    int compare = Double.compare(o.getLimit(), this.getLimit());
+    int compare = Double.compare(this.getLimit(), o.getLimit());
     if (compare != 0) {
       return compare;
     }
