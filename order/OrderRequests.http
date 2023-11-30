@@ -1,4 +1,4 @@
-### CREATE a new order for alice SELL
+### CREATE a new SELL order for Alice
 POST {{order}}
 Content-Type: application/json
 
@@ -12,7 +12,14 @@ Content-Type: application/json
   "limit": 10
 }
 
-### CREATE a new order for bob BUY
+> {%
+  client.global.set("guid_alice", response.body.guid);
+%}
+
+### GET the order for Alice
+GET {{order}}/{{guid_alice}}
+
+### CREATE a BUY order for Bob
 POST {{order}}
 Content-Type: application/json
 
@@ -22,29 +29,85 @@ Content-Type: application/json
   "ticker": "LMNO",
   "quantity": 5,
   "side": "BUY",
-  "type": "MARKET",
+  "type": "MARKET"
+}
+
+> {%
+  client.global.set("guid_bob", response.body.guid);
+%}
+
+### GET the order for Bob
+GET {{order}}/{{guid_bob}}
+
+### Create an invalid order - type is invalid - should return 400
+POST {{order}}
+Content-Type: application/json
+
+{
+  "owner": "Bob",
+  "timestamp": 123456789,
+  "ticker": "LMNO",
+  "quantity": 5,
+  "side": "BUY",
+  "type": "INVALID"
+}
+
+### GET inexistent order - should return 404
+GET {{order}}/123456789
+
+### CREATE a BUY order for testing patch for Bob
+POST {{order}}
+Content-Type: application/json
+
+{
+  "owner": "Bob",
+  "timestamp": 123456789,
+  "ticker": "LMNO",
+  "quantity": 5,
+  "side": "BUY",
+  "type": "LIMIT",
   "limit": 40
 }
 
-### GET an order
-GET {{order}}/e36d3c83-a63f-47a2-aef2-46403843f8cd
+> {%
+  client.global.set("guid_bob_patch", response.body.guid);
+%}
 
-
-
-### GET new price for order
-GET {{price}}/LMNO
-
-### PATCH filled
-PATCH {{order}}/c9153b71-271f-426c-a8bb-49d37658968f
+### PATCH filled for bob
+PATCH {{order}}/{{guid_bob_patch}}
 Content-Type: application/json
 
 {
   "filled": 2
 }
 
+### GET the order from Bob after patch - filled should be 2
+GET {{order}}/{{guid_bob_patch}}
 
-### GET by username
-GET {{order}}/by-user/piclol
+
+### PATCH inexistent order - should return 404
+PATCH {{order}}/123456789
+Content-Type: application/json
+
+{
+  "filled": 2
+}
+
+### GET from Bob
+GET {{order}}/by-user/Bob
+
+### GET from unknown user - empty array(this is deliberate choice different from yaml - check
+# path doc for more info)
+GET {{order}}/by-user/Unknown
 
 ### GET by ticker and side
-GET {{order}}/open/by-ticker/LNRD/SELL
+GET {{order}}/open/by-ticker/LMNO/BUY
+
+### GET by ticker and side with nothing
+GET {{order}}/open/by-ticker/ABCD/SELL
+
+### GET by ticker and side with invalid side - return 400 because of enum
+GET {{order}}/open/by-ticker/LMNO/INVALID
+
+### GET by ticker and side with invalid ticker - return empty array
+GET {{order}}/open/by-ticker/INVALID/BUY
