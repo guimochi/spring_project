@@ -5,7 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-// format for patch request
+/**
+ * Request body for updating filled.
+ */
 @Getter
 @Setter
 @NoArgsConstructor

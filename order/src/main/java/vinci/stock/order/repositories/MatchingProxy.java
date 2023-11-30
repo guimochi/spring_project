@@ -6,6 +6,9 @@ import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+/**
+ * Proxy for matching service.
+ */
 @Repository
 @FeignClient(name = "matching")
 public interface MatchingProxy {

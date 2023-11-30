@@ -6,7 +6,6 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import java.sql.Timestamp;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -29,7 +28,7 @@ public class Order {
   private String owner;
 
   @Column(nullable = false)
-  private Timestamp timestamp;
+  private int timestamp;
 
   @Column(nullable = false)
   private String ticker;
@@ -58,7 +57,7 @@ public class Order {
     if (this.getOwner() == null || this.getOwner().trim().isEmpty()) {
       return false;
     }
-    if (this.getTimestamp() == null) {
+    if (this.getTimestamp() < 0) {
       return false;
     }
     if (this.getTicker() == null || this.getTicker().trim().isEmpty()) {

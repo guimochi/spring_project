@@ -14,7 +14,7 @@ import vinci.stock.order.models.Side;
 import vinci.stock.order.repositories.MatchingProxy;
 
 /**
- *
+ * Controller for orders.
  */
 @RestController
 public class OrderController {
@@ -22,6 +22,12 @@ public class OrderController {
   private final OrderService service;
   private final MatchingProxy matchingProxy;
 
+  /**
+   * Constructor for OrderController.
+   *
+   * @param service       the service to use
+   * @param matchingProxy the proxy for the matching service
+   */
   public OrderController(OrderService service, MatchingProxy matchingProxy) {
     this.service = service;
     this.matchingProxy = matchingProxy;
