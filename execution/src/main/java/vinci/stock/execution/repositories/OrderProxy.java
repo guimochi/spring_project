@@ -11,6 +11,6 @@ import vinci.stock.execution.dto.FilledUpdateRequest;
 @FeignClient(name = "order")
 public interface OrderProxy {
 
-  @PatchMapping("/order/{guid}")
-  void updateOne(@PathVariable String guid, @RequestBody FilledUpdateRequest filled);
+    @PatchMapping("/order/{guid}")
+    void updateOne(@PathVariable String guid, @RequestBody FilledUpdateRequest filled);
 }

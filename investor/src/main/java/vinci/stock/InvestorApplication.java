@@ -10,8 +10,8 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @EnableDiscoveryClient
 public class InvestorApplication {
 
-  public static void main(String[] args) {
-    SpringApplication.run(InvestorApplication.class, args);
-  }
+    public static void main(String[] args) {
+        SpringApplication.run(InvestorApplication.class, args);
+    }
 
 }

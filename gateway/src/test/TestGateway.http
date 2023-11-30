@@ -1,0 +1,88 @@
+///////////////////////////////////// INVESTOR //////////////////////////////////////
+
+### POST /investor/{username} - Create investor 1 (success)
+POST {{gateway}}/investor/pica
+Content-Type: application/json
+
+{
+  "investor_data": {
+    "username": "pica",
+    "email": "piceou@canardville.com",
+    "firstname": "Scerooge",
+    "lastname": "MzcDuck",
+    "birthdate": "15/12/1947"
+  },
+  "password": "get_rich_fast"
+}
+
+
+### POST /investor/{username} - Create investor 2 (success)
+POST {{gateway}}/investor/investor2
+Content-Type: application/json
+
+{
+  "investor_data": {
+    "username": "investor2",
+    "email": "abc@gmail.com",
+    "firstname": "test",
+    "lastname":"test",
+    "birthdate": "20/01/2020"
+  },
+  "password": "password"
+}
+
+### POST /investor/{username} - Create investor with existing username (error 409)
+POST {{gateway}}/investor/pica
+Content-Type: application/json
+
+{
+  "investor_data": {
+    "username": "pica",
+    "email": "abc@gmail.com",
+    "firstname": "test",
+    "lastname":"test",
+    "birthdate": "20/01/2020"
+  },
+    "password": "password"
+}
+
+### POST /investor/{username} - Create investor with invalid data (error 400)
+POST {{gateway}}/investor/pica
+Content-Type: application/json
+
+{
+  "investor_data": {
+    "username": "picsouNonValide",
+    "firstname": "test",
+    "lastname":"",
+    "birthdate": "20/01/2020"
+  },
+  "password": "password"
+}
+
+### GET /investor/{username} - Get investor by username
+GET {{gateway}}/investor/pica
+
+### GET /investor/{username} - Get investor who does not exist (error 404)
+GET {{gateway}}/investor/random
+
+### PUT /investor/{username} - Update investor
+PUT {{gateway}}/investor/pica
+Content-Type: application/json
+
+{
+  "username": "pica",
+  "email": "picesou@canardlaque.can",
+  "firstname": "Pic",
+  "lastname": "Sou",
+  "birthdate": "30/12/2022"
+}
+
+### DELETE /investor/{username} - Delete investor (success)
+DELETE {{gateway}}/investor/investor2
+
+### DELETE /investor/{username} - Delete investor who does not exist (error 404)
+DELETE {{gateway}}/investor/investor3
+
+///////////////////////////////////// AUTH /////////////////////////////////////////
+

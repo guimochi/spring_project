@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 @FeignClient(name = "price")
 public interface PriceProxy {
 
-  @GetMapping("/price/{ticker}")
-  Integer getOne(@PathVariable String ticker);
+    @GetMapping("/price/{ticker}")
+    Integer getOne(@PathVariable String ticker);
 
-  @PatchMapping("/price/{ticker}")
-  void updateOne(@PathVariable String ticker, @RequestBody int price);
+    @PatchMapping("/price/{ticker}")
+    void updateOne(@PathVariable String ticker, @RequestBody int price);
 }

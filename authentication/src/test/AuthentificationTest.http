@@ -1,0 +1,35 @@
+### Create safeCredentials
+POST {{authentication}}/Cat4Life
+Content-Type: application/json
+
+{
+  "username": "Cat4Life",
+  "password": "NotSaying!1234"
+}
+
+### Update safeCredentials
+PUT {{authentication}}/Cat4Life
+Content-Type: application/json
+
+{
+  "username": "Cat4Life",
+  "password": "pas"
+}
+
+### Delete safeCredentials
+DELETE {{authentication}}/Cat4Life
+
+### Connect user
+POST {{authentication}}/connect
+Content-Type: application/json
+
+{
+  "username": "Cat4Life",
+  "password": "pas"
+}
+
+### Verify token
+POST http://localhost:9002/authentication/verify
+Content-Type: application/json
+
+eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJhdXRoMCIsInVzZXJuYW1lIjoiQ2F0NExpZmUifQ.ax8QP10mC2amZQnZXyMPKennC1eVo0J7D-nINN5Dctu7Z1piTxQbRp7ugDA7Q1n5B5-c01KWuPPdQZBe-t_nzA

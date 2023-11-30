@@ -11,15 +11,18 @@ import org.springframework.web.bind.annotation.RestController;
 import vinci.stock.order.models.FilledUpdateRequest;
 import vinci.stock.order.models.Order;
 import vinci.stock.order.models.Side;
+import vinci.stock.order.repositories.MatchingProxy;
 
 
 @RestController
 public class OrderController {
 
   private final OrderService service;
+  private final MatchingProxy matchingProxy;
 
-  public OrderController(OrderService service) {
+  public OrderController(OrderService service, MatchingProxy matchingProxy) {
     this.service = service;
+    this.matchingProxy = matchingProxy;
   }
 
   @PostMapping("/order")
@@ -28,6 +31,7 @@ public class OrderController {
       return ResponseEntity.badRequest().build();
     }
     Order createdOrder = service.createOne(order);
+    matchingProxy.trigger(createdOrder.getTicker());
     return ResponseEntity.ok(createdOrder);
   }
 
