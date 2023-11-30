@@ -196,7 +196,7 @@ public class GatewayController {
     * @return 200 if cash added or removed with new positions of investor, 401 if token invalid, 404 if investor not found
     */
   @PostMapping("/wallet/{username}/cash")
-  public ResponseEntity<Iterable<Position>> addOrRemoveCash(@PathVariable String username, @RequestHeader String token, @RequestBody int cash){
+  public ResponseEntity<Iterable<Position>> addOrRemoveCash(@PathVariable String username, @RequestHeader("Authorization") String token, @RequestBody int cash){
     if (!service.isAuthorized(token, username)) return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 
     try {
@@ -214,7 +214,7 @@ public class GatewayController {
    * @return 200 if net worth found, 401 if token invalid, 404 if investor not found
    */
   @GetMapping("/wallet/{username}/net-worth")
-  public ResponseEntity<Integer> readNetWorth(@PathVariable String username, @RequestHeader String token) {
+  public ResponseEntity<Integer> readNetWorth(@PathVariable String username, @RequestHeader("Authorization") String token) {
     if (!service.isAuthorized(token, username)) return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 
     try {
@@ -234,7 +234,7 @@ public class GatewayController {
    * @return 200 if position added or removed with new positions of investor, 401 if token invalid, 404 if investor not found
    */
   @PostMapping("/wallet/{username}/position/{ticker}")
-  public ResponseEntity<Iterable<Position>> depositOrWithdrawPosition(@PathVariable String username, @PathVariable String ticker, @RequestBody int quantity, @RequestHeader String token) {
+  public ResponseEntity<Iterable<Position>> depositOrWithdrawPosition(@PathVariable String username, @PathVariable String ticker, @RequestBody int quantity, @RequestHeader("Authorization") String token) {
     if (!service.isAuthorized(token, username)) return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 
     try {

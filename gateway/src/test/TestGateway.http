@@ -93,10 +93,10 @@ Content-Type: application/json
 {
   "owner": "pica",
   "timestamp": 457696995,
-  "ticker": "AMDT",
+  "ticker": "NVDA",
   "quantity": 50,
   "side": "SELL",
-  "type": "MARKET",
+  "type": "LIMIT",
   "limit": 100,
   "filled": 0
 }
@@ -110,7 +110,7 @@ Content-Type: application/json
   "timestamp": 457696995,
   "ticker": "MORT",
   "quantity": 50,
-  "side": "SELL",
+  "side": "BUY",
   "type": "MARKET",
   "limit": 100,
   "filled": 0
@@ -124,5 +124,33 @@ Authorization: {{token}}
 GET {{gateway}}/order/by-user/test2
 Authorization: {{token}}
 
+### GET /wallet/{username} - Get wallet of an investor
+GET {{gateway}}/wallet/pica
+Authorization: {{token}}
+
+### POST /wallet/{username}/cash - Add cash to wallet
+POST {{gateway}}/wallet/pica/cash
+Content-Type: application/json
+Authorization: {{token}}
+
+1000000
+
+### POST /wallet/{username}/cash - Remove cash from wallet (just 1 because pica is cheap and does not want to pay for the test)
+POST {{gateway}}/wallet/pica/cash
+Content-Type: application/json
+Authorization: {{token}}
+
+-1
+
+### GET /wallet/{username}/net-worth - Get net worth of an investor
+GET {{gateway}}/wallet/pica/net-worth
+Authorization: {{token}}
+
+### POST /wallet/{username}/position/{ticker} - Add position to wallet
+POST {{gateway}}/wallet/pica/position/LNRD
+Content-Type: application/json
+Authorization: {{token}}
+
+100
 
 
