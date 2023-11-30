@@ -1,0 +1,145 @@
+openapi: 3.0.0
+info:
+  title: Wallet Service
+  description: |
+    Le role de ce service est de tenir à jour la liste des possessions d'un investisseur.
+    C'est dans ce portefeuille qu'on peut retrouver la liste des positions (= un titre avec la quantité possédée).
+    En particulier, il est intéressant de noter qu'on traite le cash de la meme façon que n'importe
+    quel autre possession. Le symbole utilisé pour le cash sera donc "CASH".
+
+    Ce service fait l'hypothèse qu'il existe une position 0 pour tous les titres qui ne sont pas ou plus 
+    possédés par un investisseur. Ceci signifie qu'il n'est pas possible de distinguer les deux scénario suivants:
+    * Michel achete trois actions "LNRD", puis les revends 5 ans plus tard.
+    * Michel n'a jamais acheté la moindre action "LNRD" parce qu'il pense que ce n'est pas une société fiable.
+  version: 1.0.0
+paths:
+  /wallet/{username}/net-worth:
+    parameters:
+    - name: username
+      in: path
+      description: le username de l'investisseur (plus d'infos, voir 'investor.yml#/components/schemas/investordata')
+      required: true
+      schema: 
+        type: string
+    get:
+      description: Renvoie la valeur totale du portefeuille d'un investisseur 
+      responses:
+        400:
+          description: vous n'avez pas le droit de consulter les données de cet investisseur
+        404: 
+          description: l'investisseur n'a pas pu être trouvé
+        200:
+          description: voila la valeur totale de cet investisseur
+          content:
+            'application/json':
+              schema:
+                type: number
+  /wallet/{username}:
+    parameters:
+    - name: username
+      in: path
+      description: le username de l'investisseur (plus d'infos, voir 'investor.yml#/components/schemas/investordata')
+      required: true
+      schema: 
+        type: string
+    
+    get:
+      description: Renvoie la liste des positions ouvertes (quantité possédée > 0)
+      responses:
+        400:
+          description: vous n'avez pas le droit de consulter les données de cet investisseur
+        404: 
+          description: l'investisseur n'a pas pu être trouvé
+        200:
+          description: les positions ouvertes de cet investisseur
+          content:
+            'application/json':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/position'
+                example:
+                  - ticker: 'AAPL'
+                    quantity: 10
+                    unitvalue: 155.9
+                  - ticker: 'MSFT'
+                    quantity: 8
+                    unitvalue: 253.8
+                  - ticker: 'NVDA'
+                    quantity: 3
+                    unitvalue: 493.8
+    post:
+      description: |
+        Ajoute une ou plusieurs position à un portefeuille existant. Si une position existe déjà dans le portefeuille
+        pour l'instrument financier mentionné par un ticker donné, alors le portefeuille contiendra la somme des 
+        anciennes et nouvelles quantités.
+
+        **Note 1**
+        Il est important de noter qu'une position peut avoir une quantité négative. C'est de cette facon qu'on fera
+        diminuer la quantité d'un instrument financier donné dans le portefeuille de l'investisseur. Par exemple, 
+        si un investisseur fait un achat de 10 actions PYPL pour une valeur de 100 CASH,  le service Wallet recevra 
+        une requete post avec les positions suivantes:
+        `[{ticker: "PYPL", quantity: 10, unitvalue: 10}, {ticker: "CASH", quantity: -100, unitvalue: 1}]`
+
+        **Note 2**
+        Ce service renvoie le contenu du portefeuille après l'avoir mis à jour.
+      requestBody:
+        content:
+          'application/json':
+            schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/position'
+            example:
+            - ticker: "PYPL"
+              quantity: 10
+              unitvalue: 10
+            - ticker: "CASH"
+              quantity: 100
+              unitvalue: 1
+      responses:
+        400:
+          description: vous n'avez pas le droit de consulter les données de cet investisseur
+        404: 
+          description: l'investisseur n'a pas pu être trouvé
+        200:
+          description: les nouvelles positions ouvertes de cet investisseur (après qu'elles ait été mises à jour)
+          content:
+            'application/json':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/position'
+components:
+  schemas:
+    position:
+      description: |
+        Une position est une quantité d'un titre possédée par un investisseur donné
+      properties:
+        ticker:
+          description: |
+            le ticker est un code alphanumérique (généralement sur 4 char) qui indentifie un instrument
+            financier de manière unique. (C'est une hypothèse simplificatrice: dans la pratique, seul le 
+            code ISIN permet d'identifier un instrument financier de facon unique. Mais à nouveau, on considère
+            que c'est ok dans le cadre de ce projet)
+          type: string
+          example: 'AAPL'
+        quantity:
+          description: |  
+            la quantité de cet instrument financier possédée par l'investisseur
+          type: integer
+          example: 159
+        unitvalue:
+          description: |
+            la valeur unitaire de ce titre (le prix actuel de une seule action)
+          type: number
+          example: 155.9
+      required:
+        - ticker
+        - quantity
+        - unitvalue
+      example:
+        ticker: 'AAPL'
+        quantity: 120
+        unitvalue: 155.9
+          
