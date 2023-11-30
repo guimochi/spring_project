@@ -29,14 +29,14 @@ paths:
         in: path
         description: le username de l'investisseur (plus d'infos, voir '#/components/schemas/investor_data')
         required: true
-        schema: 
+        schema:
           type: string
     get:
       summary: Récupère les informations relatives à un investisseur donné
       responses:
         400:
           description: vous n'avez pas le droit de consulter les données de cet investisseur
-        404: 
+        404:
           description: l'investisseur n'a pas pu être trouvé
         200:
           description: les informations de l'investisseur
@@ -44,7 +44,7 @@ paths:
             'application/json':
               schema:
                 $ref: '#/components/schemas/investor_data'
-    post: 
+    post:
       summary: Crée un nouvel investisseur dans le système
       requestBody:
         description: |
@@ -88,7 +88,7 @@ paths:
         Toutefois, l'historique des ordres et des transactions qui ont été passées par l'investisseur continue
         d'exister au sein du système.
       responses:
-        400: 
+        400:
           description: La situation de l'investisseur ne permet actuellement pas de supprimer son compte
         404:
           description: Les credentials n'ont pas pu être trouvés
@@ -116,7 +116,7 @@ paths:
               schema:
                 type: string
                 example: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJhdXRoMCIsInBzZXVkbyI6IkNhdDRMaWZlIn0.LqfooEI-I9VTBo-isjm812ttnIPagMCwdhRkW5ngn0_tlLX86LRoxahgskmgIeWDbm4Mu3y3D8Qbhq_71hNQTA
- 
+
   /authentication/{username}:
     parameters:
       - name: username
@@ -164,7 +164,7 @@ paths:
         400:
           description: |
             L'odre n'est pas correct
-        200: 
+        200:
           description: |
             L'ordre a bien été passé. Renvoie l'ordre tel qu'il est connu par le système.
           content:
@@ -179,40 +179,40 @@ paths:
           quant à la signification de username, se référer à 'investor.yml#/components/schemas/investordata'
         in: path
         required: true
-        schema: 
+        schema:
           type: string
         example: picsou
     get:
-      description: liste tous les ordres (ouverts et complétés) qui ont été passés par un investisseur donné 
+      description: liste tous les ordres (ouverts et complétés) qui ont été passés par un investisseur donné
       responses:
         404:
-          description: l'investisseur n'a pas été trouvé 
+          description: l'investisseur n'a pas été trouvé
         401:
-          description: vous n'avez pas le droit de consulter l'historique des ordres de cet utilisateur 
+          description: vous n'avez pas le droit de consulter l'historique des ordres de cet utilisateur
         200:
-          description: voici la liste des ordres passés par cet investisseur 
+          description: voici la liste des ordres passés par cet investisseur
           content:
             'application/json':
               schema:
                 type: array
-                items: 
+                items:
                   $ref: '#/components/schemas/order'
 
   /wallet/{username}:
     parameters:
-    - name: username
-      in: path
-      description: le username de l'investisseur (plus d'infos, voir 'investor.yml#/components/schemas/investordata')
-      required: true
-      schema: 
-        type: string
-    
+      - name: username
+        in: path
+        description: le username de l'investisseur (plus d'infos, voir 'investor.yml#/components/schemas/investordata')
+        required: true
+        schema:
+          type: string
+
     get:
       description: Renvoie la liste des positions ouvertes (quantité possédée > 0)
       responses:
         401:
           description: vous n'avez pas le droit de consulter les données de cet investisseur
-        404: 
+        404:
           description: l'investisseur n'a pas pu être trouvé
         200:
           description: les positions ouvertes de cet investisseur
@@ -235,34 +235,34 @@ paths:
 
   /wallet/{username}/cash:
     parameters:
-    - name: username
-      in: path
-      description: le username de l'investisseur (plus d'infos, voir 'investor.yml#/components/schemas/investordata')
-      required: true
-      schema: 
-        type: string
-    
+      - name: username
+        in: path
+        description: le username de l'investisseur (plus d'infos, voir 'investor.yml#/components/schemas/investordata')
+        required: true
+        schema:
+          type: string
+
     post:
       description: |
-        Permet à l'investisseur de verser ou retirer de son portefeuille
+        Permet à l'investisseur de verser ou retirer du cash de son portefeuille
       requestBody:
         content:
           'application/json':
             schema:
-                type: object
-                properties:
-                  cash: 
-                    description: |
-                      la quantité de CASH ajoutée ou supprimée du portefeuille de l'investisseur. 
-                      Une valeur positive indiquera que l'investisseur a fait un versement de CASH sur son compte.
-                      Une valeur négative indiquera que l'investisseur a fait un retrait de CASH depuis son compte.
-                    type: number
+              type: object
+              properties:
+                cash:
+                  description: |
+                    la quantité de CASH ajoutée ou supprimée du portefeuille de l'investisseur. 
+                    Une valeur positive indiquera que l'investisseur a fait un versement de CASH sur son compte.
+                    Une valeur négative indiquera que l'investisseur a fait un retrait de CASH depuis son compte.
+                  type: number
             example:
-            - cash: 1000.0
+              - cash: 1000.0
       responses:
         401:
           description: vous n'avez pas le droit de consulter les données de cet investisseur
-        404: 
+        404:
           description: l'investisseur n'a pas pu être trouvé
         200:
           description: les nouvelles positions ouvertes de cet investisseur (après qu'elles ait été mises à jour)
@@ -274,18 +274,18 @@ paths:
                   $ref: '#/components/schemas/position'
   /wallet/{username}/net-worth:
     parameters:
-    - name: username
-      in: path
-      description: le username de l'investisseur (plus d'infos, voir 'investor.yml#/components/schemas/investordata')
-      required: true
-      schema: 
-        type: string
+      - name: username
+        in: path
+        description: le username de l'investisseur (plus d'infos, voir 'investor.yml#/components/schemas/investordata')
+        required: true
+        schema:
+          type: string
     get:
-      description: Renvoie la valeur totale du portefeuille d'un investisseur 
+      description: Renvoie la valeur totale du portefeuille d'un investisseur
       responses:
         401:
           description: vous n'avez pas le droit de consulter les données de cet investisseur
-        404: 
+        404:
           description: l'investisseur n'a pas pu être trouvé
         200:
           description: voila la valeur totale de cet investisseur
@@ -293,6 +293,51 @@ paths:
             'application/json':
               schema:
                 type: number
+  /wallet/{username}/position/{ticker}:
+    parameters:
+      - name: username
+        in: path
+        description: le username de l'investisseur (plus d'infos, voir 'investor.yml#/components/schemas/investordata')
+        required: true
+        schema:
+          type: string
+      - name: ticker
+        in: path
+        description: le ticker d'un titre (plus d'infos, voir 'wallet.yml#/components/schemas/position')
+        required: true
+        schema:
+          type: string
+
+    post:
+      description: |
+        Permet à l'investisseur de verser ou retirer une quantité d'un titre de son portefeuille
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              type: object
+              properties:
+                quantity:
+                  description: |
+                    la quantité de ce titre ajoutée ou supprimée du portefeuille de l'investisseur. 
+                    Une valeur positive indiquera que l'investisseur a fait un dépot d'actions de ce titre sur son compte.
+                    Une valeur négative indiquera que l'investisseur a fait un retrait d'actions de ce titre depuis son compte.
+                  type: number
+            example:
+              - quantity: 1000.0
+      responses:
+        401:
+          description: vous n'avez pas le droit de consulter les données de cet investisseur
+        404:
+          description: l'investisseur n'a pas pu être trouvé
+        200:
+          description: les nouvelles positions ouvertes de cet investisseur (après qu'elles ait été mises à jour)
+          content:
+            'application/json':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/position'
 components:
   schemas:
     investor_data:

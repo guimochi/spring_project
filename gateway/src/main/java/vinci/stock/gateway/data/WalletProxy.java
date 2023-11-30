@@ -16,7 +16,7 @@ public interface WalletProxy {
   Iterable<Position> readWallet(@PathVariable String username);
 
   @PostMapping("/wallet/{username}")
-  Iterable<Position> addPositions(@PathVariable String username, @RequestBody Iterable<Position> position);
+  Iterable<Position> addPositions(@PathVariable String username, @RequestBody Iterable<Position> positions);
 
   @GetMapping("/wallet/{username}/net-worth")
   int readNetWorth(@PathVariable String username);
