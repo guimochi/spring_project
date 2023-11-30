@@ -44,7 +44,7 @@ Content-Type: application/json
 
 
 ### GET by username
-GET {{order}}/by-user/picsou
+GET {{order}}/by-user/piclol
 
 ### GET by ticker and side
 GET {{order}}/open/by-ticker/LNRD/SELL

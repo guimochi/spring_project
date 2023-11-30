@@ -13,7 +13,9 @@ import vinci.stock.order.models.Order;
 import vinci.stock.order.models.Side;
 import vinci.stock.order.repositories.MatchingProxy;
 
-
+/**
+ *
+ */
 @RestController
 public class OrderController {
 
@@ -25,6 +27,12 @@ public class OrderController {
     this.matchingProxy = matchingProxy;
   }
 
+  /**
+   * Create a new order.
+   *
+   * @param order the order to create
+   * @return response entity with the created order if ok, bad request if not
+   */
   @PostMapping("/order")
   public ResponseEntity<Order> createOne(@RequestBody Order order) {
     if (order == null || !order.checkValid()) {
@@ -32,9 +40,16 @@ public class OrderController {
     }
     Order createdOrder = service.createOne(order);
     matchingProxy.trigger(createdOrder.getTicker());
-    return ResponseEntity.ok(createdOrder);
+//  The order created might have been modified by the matching engine, so we retrieve it again
+    Order retrievedOrder = service.readOne(createdOrder.getGuid());
+    return ResponseEntity.ok(retrievedOrder);
   }
 
+  /**
+   * Read one order by its guid.
+   * @param guid
+   * @return response entity with the order if found, not found if not
+   */
   @GetMapping("/order/{guid}")
   public ResponseEntity<Order> readOne(@PathVariable String guid) {
     Order order = service.readOne(guid);
@@ -44,8 +59,13 @@ public class OrderController {
     return ResponseEntity.ok(order);
   }
 
-  //permet au système de mettre à jour la quantité d'action qui a déjà été échangée suite à cet
-  // ordre.
+  /**
+   * Update the filled quantity of an order. This method does not check if the quantity is valid
+   * not if it exceeds quantity.
+   * @param guid the guid of the order to update
+   * @param request the request containing a FilledUpdateRequest object with the quantity to add
+   * @return response entity with ok if updated, not found if not
+   */
   @PatchMapping("/order/{guid}")
   public ResponseEntity<Void> addFilledQuantity(@PathVariable String guid,
       @RequestBody FilledUpdateRequest request) {
@@ -56,13 +76,23 @@ public class OrderController {
     return ResponseEntity.ok().build();
   }
 
-  //liste tous les ordres (ouverts et complétés) qui ont été passés par un investisseur donné
+  /**
+   * Read all orders by a user.
+   * @param username the username of the user
+   * @return response entity with the list of orders if found, empty list if not
+   */
   @GetMapping("/order/by-user/{username}")
   public ResponseEntity<Iterable<Order>> readAllByUser(@PathVariable String username) {
     Iterable<Order> orders = service.readAllByUser(username);
     return ResponseEntity.ok(orders);
   }
 
+  /**
+   * Read all open orders(where filled < quantity) by ticker and side
+   * @param ticker the ticker of the orders
+   * @param side the side of the orders
+   * @return response entity with the list of orders if found, empty list if not
+   */
   @GetMapping("/order/open/by-ticker/{ticker}/{side}")
   public ResponseEntity<Iterable<Order>> readAllOpenByTickerAndSide(@PathVariable String ticker,
       @PathVariable Side side) {
