@@ -1,0 +1,388 @@
+# EXAMPLE 1
+### CREATE a new SELL order for Alice
+POST {{order}}
+Content-Type: application/json
+
+{
+  "owner": "Alice",
+  "timestamp": 123456789,
+  "ticker": "ABCD",
+  "quantity": 5,
+  "side": "SELL",
+  "type": "LIMIT",
+  "limit": 10
+}
+
+> {%
+  client.global.set("sell_alicia_eg1", response.body.guid);
+%}
+
+### CREATE a new BUY order for Bob - this will match with Alice's order and return the order with quantity 5
+POST {{order}}
+Content-Type: application/json
+
+{
+  "owner": "Bob",
+  "timestamp": 123456789,
+  "ticker": "ABCD",
+  "quantity": 5,
+  "side": "BUY",
+  "type": "LIMIT",
+  "limit": 13
+}
+
+> {%
+  client.global.set("buy_bob_eg1", response.body.guid);
+%}
+
+### GET price from for the ticker ABCD - this will return 10
+GET {{price}}/ABCD
+
+### GET order by guid for Alice's order - filled quantity will be 5
+GET {{order}}/{{sell_alicia_eg1}}
+
+### GET order by guid for Bob's order - filled quantity will be 5
+GET {{order}}/{{buy_bob_eg1}}
+
+# EXAMPLE 2
+### CREATE a new SELL order for Alice
+POST {{order}}
+Content-Type: application/json
+
+{
+  "owner": "Alice",
+  "timestamp": 123456789,
+  "ticker": "BCDE",
+  "quantity": 5,
+  "side": "SELL",
+  "type": "LIMIT",
+  "limit": 50
+}
+
+> {%
+  client.global.set("sell_alicia_eg2", response.body.guid);
+%}
+
+### CREATE a new BUY order for Bob - this will not match with Alice's order
+POST {{order}}
+Content-Type: application/json
+
+{
+  "owner": "Bob",
+  "timestamp": 123456789,
+  "ticker": "BCDE",
+  "quantity": 5,
+  "side": "BUY",
+  "type": "LIMIT",
+  "limit": 10
+}
+
+> {%
+  client.global.set("buy_bob_eg2", response.body.guid);
+%}
+
+### GET order by guid for Alice's order - filled quantity will be 0
+GET {{order}}/{{sell_alicia_eg2}}
+
+### GET order by guid for Bob's order - filled quantity will be 0
+GET {{order}}/{{buy_bob_eg2}}
+
+# EXAMPLE 3
+### CREATE a new SELL order for Alice
+POST {{order}}
+Content-Type: application/json
+
+{
+  "owner": "Alice",
+  "timestamp": 123456789,
+  "ticker": "CDEF",
+  "quantity": 5,
+  "side": "SELL",
+  "type": "LIMIT",
+  "limit": 50
+}
+
+> {%
+  client.global.set("sell_alicia_eg3", response.body.guid);
+%}
+
+### CREATE a new BUY order for Bob - this will match with Alice's order and return the order with
+# quantity 5
+POST {{order}}
+Content-Type: application/json
+
+{
+  "owner": "Bob",
+  "timestamp": 123456789,
+  "ticker": "CDEF",
+  "quantity": 5,
+  "side": "BUY",
+  "type": "MARKET"
+}
+
+> {%
+  client.global.set("buy_bob_eg3", response.body.guid);
+%}
+
+### GET price from for the ticker CDEF - this will return 50
+GET {{price}}/CDEF
+
+### GET order by guid for Alice's order - filled quantity will be 5
+GET {{order}}/{{sell_alicia_eg3}}
+
+### GET order by guid for Bob's order - filled quantity will be 5
+GET {{order}}/{{buy_bob_eg3}}
+
+# EXAMPLE 4
+### CREATE a new SELL order for Alice
+POST {{order}}
+Content-Type: application/json
+
+{
+  "owner": "Alice",
+  "timestamp": 123456789,
+  "ticker": "DEFG",
+  "quantity": 5,
+  "side": "SELL",
+  "type": "MARKET"
+}
+
+> {%
+  client.global.set("sell_alicia_eg4", response.body.guid);
+%}
+
+### CREATE a new BUY order for Bob - this will match with Alice's order and return the order with
+# quantity 5
+POST {{order}}
+Content-Type: application/json
+
+{
+  "owner": "Bob",
+  "timestamp": 123456789,
+  "ticker": "DEFG",
+  "quantity": 5,
+  "side": "BUY",
+  "type": "LIMIT",
+  "limit": 50
+}
+
+> {%
+  client.global.set("buy_bob_eg4", response.body.guid);
+%}
+
+### GET price from for the ticker DEFG - this will return 50
+GET {{price}}/DEFG
+
+### GET order by guid for Alice's order - filled quantity will be 5
+GET {{order}}/{{sell_alicia_eg4}}
+
+### GET order by guid for Bob's order - filled quantity will be 5
+GET {{order}}/{{buy_bob_eg4}}
+
+# EXAMPLE 5
+### CREATE a new SELL order for Alice
+POST {{order}}
+Content-Type: application/json
+
+{
+  "owner": "Alice",
+  "timestamp": 123456789,
+  "ticker": "EFGH",
+  "quantity": 5,
+  "side": "SELL",
+  "type": "MARKET"
+}
+
+> {%
+  client.global.set("sell_alicia_eg5", response.body.guid);
+%}
+
+### CREATE a new BUY order for Bob - this will match with Alice's order and return the order with
+# quantity 5
+POST {{order}}
+Content-Type: application/json
+
+{
+  "owner": "Bob",
+  "timestamp": 123456789,
+  "ticker": "EFGH",
+  "quantity": 5,
+  "side": "BUY",
+  "type": "MARKET"
+}
+
+> {%
+  client.global.set("buy_bob_eg5", response.body.guid);
+%}
+
+### GET price from for the ticker EFGH - this will return the last traded price or 1 if no trades have occurred
+GET {{price}}/EFGH
+
+### GET order by guid for Alice's order - filled quantity will be 5
+GET {{order}}/{{sell_alicia_eg5}}
+
+### GET order by guid for Bob's order - filled quantity will be 5
+GET {{order}}/{{buy_bob_eg5}}
+
+# EXAMPLE 6
+### CREATE a new SELL order for Alice
+POST {{order}}
+Content-Type: application/json
+
+{
+  "owner": "Alice",
+  "timestamp": 123456789,
+  "ticker": "FGHI",
+  "quantity": 200,
+  "side": "SELL",
+  "type": "LIMIT",
+  "limit": 10
+}
+
+> {%
+  client.global.set("sell_alicia_eg6", response.body.guid);
+%}
+
+### CREATE a new BUY order for Bob - this will match with Alice's order and return the order with
+# quantity 50
+POST {{order}}
+Content-Type: application/json
+
+{
+  "owner": "Bob",
+  "timestamp": 123456789,
+  "ticker": "FGHI",
+  "quantity": 50,
+  "side": "BUY",
+  "type": "MARKET"
+}
+
+> {%
+  client.global.set("buy_bob_eg6", response.body.guid);
+%}
+
+### GET order by guid for Alice's order - filled quantity will 50
+GET {{order}}/{{sell_alicia_eg6}}
+
+### CREATE a new BUY order for Cédric - this will match with Alice's order and return the order with
+# quantity 50
+POST {{order}}
+Content-Type: application/json
+
+{
+  "owner": "Cédric",
+  "timestamp": 123456789,
+  "ticker": "FGHI",
+  "quantity": 50,
+  "side": "BUY",
+  "type": "MARKET"
+}
+
+> {%
+  client.global.set("buy_cedric_eg6", response.body.guid);
+%}
+
+### GET order by guid for Alice's order - filled quantity will 100
+GET {{order}}/{{sell_alicia_eg6}}
+
+### CREATE a new BUY order for Fred - this will match with Alice's order and return the order with
+# quantity 100
+POST {{order}}
+Content-Type: application/json
+
+{
+  "owner": "Fred",
+  "timestamp": 123456789,
+  "ticker": "FGHI",
+  "quantity": 100,
+  "side": "BUY",
+  "type": "LIMIT",
+  "limit": 11
+}
+
+> {%
+  client.global.set("buy_fred_eg6", response.body.guid);
+%}
+
+### GET price from for the ticker FGHI - this will return 10.5
+GET {{price}}/FGHI
+
+### GET order by guid for Alice's order - filled quantity will be 200
+GET {{order}}/{{sell_alicia_eg6}}
+
+### GET order by guid for Bob's order - filled quantity will be 50
+GET {{order}}/{{buy_bob_eg6}}
+
+### GET order by guid for Cédric's order - filled quantity will be 50
+GET {{order}}/{{buy_cedric_eg6}}
+
+### GET order by guid for Fred's order - filled quantity will be 100
+GET {{order}}/{{buy_fred_eg6}}
+
+# EXAMPLE 7
+### CREATE a new BUY order for Alice
+POST {{order}}
+Content-Type: application/json
+
+{
+  "owner": "Alice",
+  "timestamp": 123456789,
+  "ticker": "GHIJ",
+  "quantity": 200,
+  "side": "BUY",
+  "type": "LIMIT",
+  "limit": 10
+}
+
+> {%
+  client.global.set("buy_alicia_eg7", response.body.guid);
+%}
+
+### CREATE a new SELL order for Bob - this will not match with Alice's order
+POST {{order}}
+Content-Type: application/json
+
+{
+  "owner": "Bob",
+  "timestamp": 123456789,
+  "ticker": "GHIJ",
+  "quantity": 200,
+  "side": "SELL",
+  "type": "LIMIT",
+  "limit": 100000
+}
+
+> {%
+  client.global.set("sell_bob_eg7", response.body.guid);
+%}
+
+### CREATE a new SELL order for Cédric - this will match with Alice's order and return the order with
+# quantity 200
+POST {{order}}
+Content-Type: application/json
+
+{
+  "owner": "Cédric",
+  "timestamp": 123456789,
+  "ticker": "GHIJ",
+  "quantity": 200,
+  "side": "SELL",
+  "type": "LIMIT",
+  "limit": 9.5
+}
+
+> {%
+  client.global.set("sell_cedric_eg7", response.body.guid);
+%}
+
+### GET price from for the ticker GHIJ - this will return 9.5
+GET {{price}}/GHIJ
+
+### GET order by guid for Alice's order - filled quantity will be 200
+GET {{order}}/{{buy_alicia_eg7}}
+
+### GET order by guid for Bob's order - filled quantity will be 0
+GET {{order}}/{{sell_bob_eg7}}
+
+### GET order by guid for Cédric's order - filled quantity will be 200
+GET {{order}}/{{sell_cedric_eg7}}

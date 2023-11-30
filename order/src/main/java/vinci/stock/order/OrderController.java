@@ -36,6 +36,9 @@ public class OrderController {
   /**
    * Create a new order.
    *
+   * <p>Note: the matching service is triggered after the order is created. So it's possible
+   * that the order is changed between the time it is created and it's returned</p>
+   *
    * @param order the order to create
    * @return response entity with the created order if ok, bad request if not
    */
@@ -46,9 +49,7 @@ public class OrderController {
     }
     Order createdOrder = service.createOne(order);
     matchingProxy.trigger(createdOrder.getTicker());
-//  The order created might have been modified by the matching engine, so we retrieve it again
-    Order retrievedOrder = service.readOne(createdOrder.getGuid());
-    return ResponseEntity.ok(retrievedOrder);
+    return ResponseEntity.ok(createdOrder);
   }
 
   /**
