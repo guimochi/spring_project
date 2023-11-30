@@ -5,6 +5,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Transaction class
+ *
+ * <p>Transaction class is the class that represents the transaction to be given for execute. It
+ * contains all the information of a transaction.
+ */
 @Getter
 @Setter
 @AllArgsConstructor

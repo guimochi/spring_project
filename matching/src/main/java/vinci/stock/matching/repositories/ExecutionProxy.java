@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import vinci.stock.matching.models.Transaction;
 
+/**
+ * Proxy for the execution service.
+ */
 @Repository
 @FeignClient(name = "execution")
 public interface ExecutionProxy {

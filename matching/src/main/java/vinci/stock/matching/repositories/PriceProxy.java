@@ -6,6 +6,9 @@ import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+/**
+ * Proxy for the price service.
+ */
 @Repository
 @FeignClient(name = "price")
 public interface PriceProxy {
