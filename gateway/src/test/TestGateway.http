@@ -160,4 +160,9 @@ Authorization: {{token}}
 
 -1
 
+### POST /wallet/{username}/position/{ticker} - Remove a position that pica does not have
+POST {{gateway}}/wallet/pica/position/TEST
+Content-Type: application/json
+Authorization: {{token}}
 
+-5
