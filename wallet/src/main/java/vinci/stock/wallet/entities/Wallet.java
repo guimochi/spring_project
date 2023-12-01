@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-// create table wallet with (owner varchar(255) primary key, list<position> positions);
 @Getter
 @Setter
 @ToString
