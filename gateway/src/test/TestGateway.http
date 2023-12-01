@@ -34,7 +34,7 @@ Content-Type: application/json
 GET {{gateway}}/investor/pica
 
 ### GET /investor/{username} - Get investor who does not exist (error 404)
-GET {{gateway}}/investor/random
+GET {{gateway}}/investor/investor3
 
 ### PUT /investor/{username} - Update investor
 PUT {{gateway}}/investor/pica
@@ -62,7 +62,7 @@ Content-Type: application/json
 
 > {% client.global.set("token", response.body) %}
 
-### PUT /authentication/{username} - Update investor credentials (success)
+### PUT /authentication/{username} - Update investor credentials
 PUT {{gateway}}/authentication/pica
 Content-Type: application/json
 
@@ -152,5 +152,12 @@ Content-Type: application/json
 Authorization: {{token}}
 
 100
+
+### POST /wallet/{username}/position/{ticker} - Remove position from wallet (again just 1 because pica is cheap).
+POST {{gateway}}/wallet/pica/position/LNRD
+Content-Type: application/json
+Authorization: {{token}}
+
+-1
 
 
