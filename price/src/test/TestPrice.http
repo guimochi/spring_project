@@ -1,15 +1,16 @@
-### GET PRICE in db
+### GET PRICE in db (success, returns price in db)
 http://localhost:9004/price/LNRD
-### GET PRICE not in db
+
+### GET PRICE not in db (success returns price 1)
 http://localhost:9004/price/ABCD
 
-### PATCH price in db
+### PATCH price in db (success)
 PATCH {{price}}/LNRD
 Content-Type: application/json
 
 999
 
-### PATCH price not in db
+### PATCH price not in db (success)
 PATCH {{price}}/ABCD
 Content-Type: application/json
 
