@@ -22,6 +22,9 @@ Content-Type: application/json
   "limit": 10,
   "filled": 0
 }
+> {%
+    client.global.set("guid_test", response.body.guid);
+%}
 
 
 ### CREATE a new order for user test2 side BUY which be executed
@@ -38,10 +41,12 @@ Content-Type: application/json
   "limit": 10,
   "filled": 0
 }
+> {%
+    client.global.set("guid_test2", response.body.guid);
+%}
 
-
-### EXECUTE RESULTS -> if matching algo didnt worked, use the following commands to execute the orders manually
-### Make sure to change the order guid's to the one created previously
+### DO NOT USE THE FOLLOWING COMMAND BEFORE EXECUTE RESULTS TESTS
+### -> if matching algorithm didnt worked, use the following commands to execute the orders manually
 ###
 POST {{execution}}/LNRD/test/test2
 Content-Type: application/json
@@ -50,11 +55,13 @@ Content-Type: application/json
   "ticker": "LNRD",
   "seller": "test",
   "buyer": "test2",
-  "sell_order_guid": "(test_order_guid)",
-  "buy_order_guid": "(test2_order_guid)",
+  "sell_order_guid": "{{guid_test}}",
+  "buy_order_guid": "{{guid_test2}}",
   "quantity": 10,
   "price": 10
 }
+
+### EXECUTE RESULTS
 
 ### Get open wallet of test -> should have only 100 CASH (10 quantity * 10 limit)
 GET {{wallet}}/test

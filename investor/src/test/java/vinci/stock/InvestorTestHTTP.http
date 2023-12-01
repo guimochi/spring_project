@@ -1,13 +1,13 @@
-### Get user named Pica
-GET {{investor}}/pic
+### Get user named Pica -> should return 404 Not Found
+GET {{investor}}/pica
 
-### Create user named Pica and its credentials
-POST {{investor}}/pic
+### Create user named Pica and its credentials -> should return 201 Created, 409 Conflict if already exists
+POST {{investor}}/pica
 Content-Type: application/json
 
 {
   "investor_data": {
-    "username": "pic",
+    "username": "pica",
     "email": "piceou@canardville.com",
     "firstname": "Scerooge",
     "lastname": "MzcDuck",
@@ -16,7 +16,10 @@ Content-Type: application/json
   "password": "get_rich_fast"
 }
 
-### Connect user named Pica
+### Get user named Pica -> should return 200 OK with the user
+GET {{investor}}/pica
+
+### Connect user named Pica -> should return 200 OK with a token
 POST {{authentication}}/connect
 Content-Type: application/json
 
@@ -25,7 +28,7 @@ Content-Type: application/json
   "password": "get_rich_fast"
 }
 
-### Update user named Pica
+### Update user named Pica -> should return 200 OK
 PUT {{investor}}/pica
 Content-Type: application/json
 
@@ -37,11 +40,13 @@ Content-Type: application/json
   "birthdate": "30/12/2022"
 }
 
-### Delete user named Pica and its credentials
+### Get user named Pica -> should return 200 OK with the updated user
+GET {{investor}}/pica
+
+### Delete user named Pica and its credentials -> should return 200 OK because nothing in Wallet
 DELETE {{investor}}/pica
 
-
-### Connect user named Pica
+### Connect user named Pica -> should return 401 because user does not exist anymore
 POST {{authentication}}/connect
 Content-Type: application/json
 
@@ -49,3 +54,61 @@ Content-Type: application/json
   "username": "pica",
   "password": "get_rich_fast"
 }
+
+### Create user named Pica and its credentials -> should return 201 Created
+POST {{investor}}/pica
+Content-Type: application/json
+
+{
+  "investor_data": {
+    "username": "pica",
+    "email": "piceou@canardville.com",
+    "firstname": "Scerooge",
+    "lastname": "MzcDuck",
+    "birthdate": "15/12/1947"
+  },
+  "password": "get_rich_fast"
+}
+
+
+### CREATE a new order for user pica
+POST {{order}}
+Content-Type: application/json
+
+{
+  "owner": "pica",
+  "timestamp": 457696995,
+  "ticker": "TEST",
+  "quantity": 10,
+  "side": "SELL",
+  "type": "LIMIT",
+  "limit": 10,
+  "filled": 0
+}
+
+
+### CREATE a new order for user test side SELL
+POST {{order}}
+Content-Type: application/json
+
+{
+  "owner": "testPica",
+  "timestamp": 457696995,
+  "ticker": "TEST",
+  "quantity": 10,
+  "side": "BUY",
+  "type": "LIMIT",
+  "limit": 10,
+  "filled": 0
+}
+
+### GET wallet for user pica -> should return 200 OK with the wallet (CASH 100)
+GET {{wallet}}/pica
+
+### Delete user named Pica and its credentials -> should return 404 because still has money in Wallet
+DELETE {{investor}}/pica
+
+### Get user named Pica -> should return 200 OK with the user
+GET {{investor}}/pica
+
+

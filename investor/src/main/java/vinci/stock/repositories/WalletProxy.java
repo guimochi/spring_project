@@ -10,6 +10,6 @@ import vinci.stock.dto.Position;
 @FeignClient(name = "wallet")
 public interface WalletProxy {
 
-    @GetMapping("/wallets/{username}")
+    @GetMapping("/wallet/{username}")
     Iterable<Position> readOne(@PathVariable String username);
 }

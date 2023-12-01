@@ -4,6 +4,7 @@ import feign.FeignException;
 import org.springframework.stereotype.Service;
 import vinci.stock.dto.Credentials;
 import vinci.stock.dto.InvestorData;
+import vinci.stock.dto.Position;
 import vinci.stock.entities.Investor;
 import vinci.stock.repositories.AuthentificationProxy;
 import vinci.stock.repositories.InvestorRepository;
