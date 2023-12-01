@@ -10,11 +10,17 @@ Content-Type: application/json
 
 999
 
+### GET PRICE in db (to show updated price 999)
+http://localhost:9004/price/LNRD
+
 ### PATCH price not in db (success)
 PATCH {{price}}/ABCD
 Content-Type: application/json
 
 700
+
+### GET PRICE new in db
+GET http://localhost:9004/price/ABCD
 
 ### GET Price updated that was not in db (now in db)
 GET {{price}}/ABCD
