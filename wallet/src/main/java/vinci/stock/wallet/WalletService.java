@@ -3,6 +3,7 @@ package vinci.stock.wallet;
 import org.springframework.stereotype.Service;
 import vinci.stock.wallet.dto.Position;
 import vinci.stock.wallet.entities.Wallet;
+import vinci.stock.wallet.repository.InvestorProxy;
 import vinci.stock.wallet.repository.PriceProxy;
 import vinci.stock.wallet.repository.WalletRepository;
 
@@ -12,18 +13,26 @@ import java.util.List;
 public class WalletService {
     private final WalletRepository repository;
     private final PriceProxy priceProxy;
+    private final InvestorProxy investorProxy;
 
-    public WalletService(WalletRepository repository, PriceProxy priceProxy) {
+    public WalletService(WalletRepository repository, PriceProxy priceProxy, InvestorProxy investorProxy) {
         this.repository = repository;
         this.priceProxy = priceProxy;
+        this.investorProxy = investorProxy;
     }
 
     public double getNetWorth(String username) {
-        Iterable<Wallet> wallet = repository.findByOwner(username);
-        if (wallet == null) {
+        try {
+            investorProxy.getInvestor(username);
+        } catch (Exception e) {
             return Integer.MIN_VALUE;
         }
+
+        Iterable<Wallet> wallet = repository.findByOwner(username);
         double netWorth = 0;
+        if (wallet == null) {
+            return netWorth;
+        }
         for (Wallet w : wallet) {
             netWorth += w.getQuantity() * priceProxy.getPriceFromStock(w.getTicker()) ;
         }
@@ -31,6 +40,11 @@ public class WalletService {
     }
 
     public List<Position> openWalletByUser(String username) {
+        try {
+            investorProxy.getInvestor(username);
+        } catch (Exception e) {
+            return null;
+        }
         Iterable<Wallet> wallet = repository.findOpenByOwner(username);
         if (wallet == null) {
             return null;
@@ -47,6 +61,12 @@ public class WalletService {
     }
 
     public List<Position> createOrUpdateWallets(List<Position> positions, String username) {
+        try {
+            investorProxy.getInvestor(username);
+        } catch (Exception e) {
+            return null;
+        }
+
         List<Wallet> wallet = repository.findByOwner(username);
         for (Position p : positions) {
             Wallet w = wallet.stream().filter(x -> x.getTicker().equals(p.getTicker())).findFirst().orElse(null);
@@ -60,8 +80,8 @@ public class WalletService {
             }
             repository.save(w);
         }
-        wallet = repository.findByOwner(username);
         positions.clear();
+        wallet = repository.findByOwner(username);
         for (Wallet w : wallet) {
             Position p = new Position();
             p.setTicker(w.getTicker());

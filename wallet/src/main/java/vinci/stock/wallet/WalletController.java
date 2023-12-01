@@ -17,6 +17,9 @@ public class WalletController {
     @GetMapping("/wallet/{username}/net-worth")
     public ResponseEntity<Double> getNetWorth(@PathVariable String username) {
         double netWorth = service.getNetWorth(username);
+        if (netWorth == Integer.MIN_VALUE) {
+            return ResponseEntity.notFound().build();
+        }
         return ResponseEntity.ok(netWorth);
     }
 
@@ -33,7 +36,14 @@ public class WalletController {
 
     @PostMapping("/wallet/{username}")
     public ResponseEntity<Iterable<Position>> createOrUpdateWallets(@RequestBody Iterable<Position> positions,@PathVariable String username) {
+        if (positions == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
         Iterable<Position> updatedPositions = service.createOrUpdateWallets((List<Position>) positions, username);
+        if (updatedPositions == null) {
+            return ResponseEntity.notFound().build();
+        }
         return ResponseEntity.ok(updatedPositions);
     }
 

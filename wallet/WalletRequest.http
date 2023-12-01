@@ -1,11 +1,11 @@
 ### Get net-worth of a owner
-GET {{wallet}}/{{username}}/net-worth
+GET {{wallet}}/pica/net-worth
 
 ### Get open wallet of a owner
-GET {{wallet}}/{{username}}
+GET {{wallet}}/pica
 
 ### post a list of new positions to wallet
-POST {{wallet}}/{{username}}
+POST {{wallet}}/pica
 Content-Type: application/json
 
 [
