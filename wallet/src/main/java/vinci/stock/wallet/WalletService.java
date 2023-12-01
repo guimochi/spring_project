@@ -21,6 +21,13 @@ public class WalletService {
         this.investorProxy = investorProxy;
     }
 
+    /**
+    * Returns the net worth of the owner .
+    * 
+    * @param username - the username of the owner to check
+    * 
+    * @return the value of is net worth, 0 if there is no wallet for the user or Integer.MIN if the owner doesn't exist
+    */
     public double getNetWorth(String username) {
         try {
             investorProxy.getInvestor(username);
@@ -39,6 +46,13 @@ public class WalletService {
         return netWorth;
     }
 
+    /**
+    * Returns a list of positions that the user has opened.
+    * 
+    * @param username - the username of the owner to check
+    * 
+    * @return a non - null list of positions or null if there is no wallet for the user or the investor doesn't exist
+    */
     public List<Position> openWalletByUser(String username) {
         try {
             investorProxy.getInvestor(username);
@@ -60,6 +74,14 @@ public class WalletService {
         return positions;
     }
 
+    /**
+    * Creates or updates wallets.
+    * 
+    * @param positions - List of positions to be updated or created.
+    * @param username - User who is trying to create or update wallets.
+    * 
+    * @return List of positions updated or created. Null if the owner doesn't exist
+    */
     public List<Position> createOrUpdateWallets(List<Position> positions, String username) {
         try {
             investorProxy.getInvestor(username);

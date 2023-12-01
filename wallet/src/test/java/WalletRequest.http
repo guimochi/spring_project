@@ -1,0 +1,75 @@
+POST {{investor}}/pica
+Content-Type: application/json
+
+{
+  "investor_data": {
+    "username": "pica",
+    "email": "piceou@canardville.com",
+    "firstname": "Scerooge",
+    "lastname": "MzcDuck",
+    "birthdate": "15/12/1947"
+  },
+  "password": "get_rich_fast"
+}
+
+### Get net-worth of a owner => Should return 200 with the net-worth of the owner (0)
+GET {{wallet}}/pica/net-worth
+
+### Get open wallet of a owner => Should return 200 with a list of the open positions of the owner (empty)
+GET {{wallet}}/pica
+
+### post a list of new positions to wallet => Should return 200 whith the new list of all the user's positions
+POST {{wallet}}/pica
+Content-Type: application/json
+
+[
+  {
+    "ticker": "CPT",
+    "quantity": 100,
+    "unitValue": 10
+  },
+  {
+    "ticker": "RAF",
+    "quantity": -4,
+    "unitValue": 20
+  },
+  {
+    "ticker": "EDC",
+    "quantity": 8,
+    "unitValue": 30
+  }
+]
+
+### Get net-worth of a owner => Should return 200 with the net-worth of the owner (104)
+GET {{wallet}}/pica/net-worth
+
+### Get open wallet of a owner => Should return 200 with a list of the open positions of the owner (position for CPT, EDC)
+GET {{wallet}}/pica
+
+### Get net-worth of a owner => Should return 404
+GET {{wallet}}/notExistantUser/net-worth
+
+### Get open wallet of a non existant owner => Should return 404
+GET {{wallet}}/notExistantUser
+
+### post a list of new positions to a non existant owner wallet => Should return 404
+POST {{wallet}}/notExistantUser
+Content-Type: application/json
+
+[
+  {
+    "ticker": "CPT",
+    "quantity": 100,
+    "unitValue": 10
+  },
+  {
+    "ticker": "RAF",
+    "quantity": -4,
+    "unitValue": 20
+  },
+  {
+    "ticker": "EDC",
+    "quantity": 8,
+    "unitValue": 30
+  }
+]

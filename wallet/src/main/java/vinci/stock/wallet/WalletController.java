@@ -23,7 +23,6 @@ public class WalletController {
         return ResponseEntity.ok(netWorth);
     }
 
-    //get all open positions for a given user
     @GetMapping("/wallet/{username}")
     public ResponseEntity<Iterable<Position>> openWalletByUser(@PathVariable String username) {
         Iterable<Position> positions = service.openWalletByUser(username);
