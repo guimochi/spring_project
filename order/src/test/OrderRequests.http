@@ -5,7 +5,7 @@ Content-Type: application/json
 {
   "owner": "Alice",
   "timestamp": 123456789,
-  "ticker": "LMNO",
+  "ticker": "APPL",
   "quantity": 3,
   "side": "SELL",
   "type": "LIMIT",
@@ -26,7 +26,7 @@ Content-Type: application/json
 {
   "owner": "Bob",
   "timestamp": 123456789,
-  "ticker": "LMNO",
+  "ticker": "APPL",
   "quantity": 5,
   "side": "BUY",
   "type": "MARKET"
@@ -46,7 +46,7 @@ Content-Type: application/json
 {
   "owner": "Bob",
   "timestamp": 123456789,
-  "ticker": "LMNO",
+  "ticker": "APPL",
   "quantity": 5,
   "side": "BUY",
   "type": "INVALID"
@@ -62,7 +62,7 @@ Content-Type: application/json
 {
   "owner": "Bob",
   "timestamp": 123456789,
-  "ticker": "LMNO",
+  "ticker": "APPL",
   "quantity": 5,
   "side": "BUY",
   "type": "LIMIT",
@@ -96,18 +96,18 @@ Content-Type: application/json
 ### GET from Bob
 GET {{order}}/by-user/Bob
 
-### GET from unknown user - empty array(this is deliberate choice different from yaml - check
-# path doc for more info)
+### GET from unknown user - empty array
+# this is deliberate choice different from yaml - checkpath doc for more info
 GET {{order}}/by-user/Unknown
 
 ### GET by ticker and side
-GET {{order}}/open/by-ticker/LMNO/BUY
+GET {{order}}/open/by-ticker/APPL/BUY
 
 ### GET by ticker and side with nothing
 GET {{order}}/open/by-ticker/ABCD/SELL
 
 ### GET by ticker and side with invalid side - return 400 because of enum
-GET {{order}}/open/by-ticker/LMNO/INVALID
+GET {{order}}/open/by-ticker/APPL/INVALID
 
 ### GET by ticker and side with invalid ticker - return empty array
 GET {{order}}/open/by-ticker/INVALID/BUY
